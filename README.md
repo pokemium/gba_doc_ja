@@ -4,6 +4,7 @@
 
 ### GBA
 
+- [仕様](spec.md)
 - [DMA転送](dma.md)
 - [タイマー](timer.md)
 
