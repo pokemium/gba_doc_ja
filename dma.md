@@ -4,13 +4,13 @@ GBAには4つのDMAチャンネルがあり、優先度は DMA0が最高、DMA1�
 
 DMA転送がアクティブなときはCPUは一時停止しますが、`Sound/Blanking DMA転送`が一時停止している間はCPUは動作しています。
 
-## それぞれのチャネルの役割
+## それぞれのチャンネルの役割
 
-- DMA0: 優先度が最も高く、HBlank DMAなど時間にシビアな転送をしたいときにベストです
-- DMA1とDMA2: can be used to feed digital sample data to the Sound FIFOs
-- DMA3: Game Pak ROM/FlashROMに書き込みをする際に使われます(GamePak SRAMは除く)
+- DMA0: 優先度が最も高く、HBlank DMAなど時間にシビアな転送をしたいときにベストです。
+- DMA1とDMA2: DMA0の次に優先度が高く、サウンド再生時のFIFOにデータを転送する時に使われることが多いです。内部メモリ・外部メモリから内部メモリへの転送が可能です。
+- DMA3: Game Pak ROM/FlashROMに書き込みをする際に使われます(GamePak SRAMは除く)。
 
-加えて、全部のチャネルは汎用的なデータ転送用途にも使うことができます。
+加えて、全部のチャンネルは汎用的なデータ転送用途にも使うことができます。
 
 ## ソースレジスタ(SAD)
 
@@ -40,6 +40,8 @@ DMA0, DMA1, DMA2の場合は`0x07ff_ffff`まで、DMA3の場合は`0x0fff_ffff`�
 
 ## ワードカウントレジスタ(CNT_L)
 
+CNTの下位16bitです。
+
 ```
 0x0400_00B8 - DMA0CNT_L - DMA0ワードカウント (W) (14 bit, 0x1..0x4000)
 0x0400_00C4 - DMA1CNT_L - DMA1ワードカウント (W) (14 bit, 0x1..0x4000)
@@ -49,7 +51,9 @@ DMA0, DMA1, DMA2の場合は`0x07ff_ffff`まで、DMA3の場合は`0x0fff_ffff`�
 
 一度に転送されるデータのサイズを指定するためのレジスタです。 転送タイプによって1ワードカウントで16bit(2byte)転送するのか32bit(4byte)転送するのかが変わります。0を入れた場合最大値(0x4000 or 0x10000)として扱われます
 
-## 制御レジスタ
+## 制御レジスタ(CNT_H)
+
+CNTの上位16bitです。
 
 ```
 0x0400_00BA - DMA0CNT_H - DMA0制御レジスタ (R/W)
@@ -70,7 +74,7 @@ DMA0, DMA1, DMA2の場合は`0x07ff_ffff`まで、DMA3の場合は`0x0fff_ffff`�
 14 | IRQ upon end of Word Count   (0=Disable, 1=Enable)
 15 | DMA有効フラグ (0=無効, 1=有効)
 
-※ DMAチャネルごとに異なります。 DMA0=Prohibited, DMA1/DMA2=Sound FIFO, DMA3=Video Capture
+※ DMAチャンネルごとに異なります。 DMA0=Prohibited, DMA1/DMA2=Sound FIFO, DMA3=Video Capture
 
 DMA有効フラグ(bit15)を0から1に変更した後、DMA関連レジスタにアクセスする前に2クロックサイクル待つ必要があります。
 
@@ -88,6 +92,8 @@ DMA有効フラグ(bit15)を0から1に変更すると、SAD, DAD, CNT_Lはリ�
 
 ## DMAリピートビット(CNT_Hのbit9)
 
+一度のDMA転送が終了したあとに次回のDMA転送を繰り返し行うか行わないかの設定です。 
+
 リピートビットがクリアされている場合: 指定したデータ単位数を転送すると、DMA有効フラグは自動的にクリアされます。
 
 リピートビットがセットされている場合: 転送後もDMA有効フラグはセットされたままで、スタート条件（例：HBlank、Fifo）がtrueになるたびに転送が再開されます。
@@ -96,7 +102,7 @@ DMA有効フラグ(bit15)を0から1に変更すると、SAD, DAD, CNT_Lはリ�
 
 ## サウンドDMA (FIFO Timing Mode) (DMA1/DMA2のみ)
 
-このモードではDMAリピートビットをセットし、転送先アドレスをFIFO_A（0x0400_00A0）またはFIFO_B（0x0400_00A4）に設定する必要があります。
+サウンド再生用のFIFOへの転送やフレームごとの転送(サウンドDMA)を行う場合は上述のリピートビットをONにします。また転送先アドレスをFIFO_A（0x0400_00A0）またはFIFO_B（0x0400_00A4）に設定する必要があります。
 
 サウンドコントローラからのDMA要求により、32ビットを1単位として4単位分（合計16バイト）転送します（ワードカウントレジスタとDMA転送タイプビットは無視されます）。
 
@@ -108,7 +114,7 @@ FIFOモードでは転送先アドレスはインクリメントされません�
 
 ## Game Pak DMA
 
-DMA 3 のみが Game Pak ROMまたは Flash ROMとの間のデータ転送に使用されますが、Game Pak SRAMにはアクセスできません。（SRAMデータバスが8bit単位に制限されているため）
+DMA3 のみが Game Pak ROMまたは Flash ROMとの間のデータ転送に使用されますが、（SRAMデータバスが8bit単位に制限されているため）Game Pak SRAMにはアクセスできません。
 
 通常モードでは、ワードカウントが0になるまでDMAがリクエストされます。
 
