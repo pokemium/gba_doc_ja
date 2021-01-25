@@ -7,6 +7,7 @@
 - [仕様](spec.md)
 - [メモリマップ](memory.md)
 - [DMA転送](dma.md)
+- [割り込み](interrupt.md)
 - [タイマー](timer.md)
 - [キー入力](keypad.md)
 
