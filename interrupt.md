@@ -100,16 +100,15 @@ IMEをクリアしたりIEのフラグをクリアしているサイクルでは
 
 アドレス | サイズ | 内容
 ---- | ---- | ---- 
-0x0300_7FFC | 4   | Pointer to user IRQ handler (32bit ARM code)
-0x0300_7FF8 | 2   | Interrupt Check Flag (for IntrWait/VBlankIntrWait functions)
-0x0300_7FF4 | 4   | Allocated Area
-0x0300_7FF0 | 4   | サウンドバッファのアドレスを格納する
+0x0300_7F00 | 160 | スタック領域(SP_irq) (6 words/time)
+0x0300_7FA0 | 64  | スタック領域(SP_svc) (4 words/time)
 0x0300_7FE0 | 16  | Allocated Area
-0x0300_7FA0 | 64  | Default area for SP_svc Supervisor Stack (4 words/time)
-0x0300_7F00 | 160 | Default area for SP_irq Interrupt Stack (6 words/time)
-~0x0300_7F00 | -- | これ以降はユーザー用のスタック 
+0x0300_7FF0 | 4   | サウンドバッファのアドレスを格納する
+0x0300_7FF4 | 4   | Allocated Area
+0x0300_7FF8 | 2   | Interrupt Check Flag (for IntrWait/VBlankIntrWait functions)
+0x0300_7FFC | 4   | ユーザー定義IRQハンドラのアドレス(ARMスタイル)を格納 
 
-`0x0300_7F00`以下のメモリは、ユーザスタックとユーザデータのための空きメモリです。3つのスタックポインタは、それぞれの領域の先頭で初期化されます。
+`0x0300_7F00`より前のメモリは、ユーザスタックとユーザデータのための空きメモリです。3つのスタックポインタは、それぞれの領域の先頭で初期化されます。
 
 - SP_svc = `0x0300_7FE0`
 - SP_irq = `0x0300_7FA0`
