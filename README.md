@@ -11,6 +11,12 @@
 - [システム制御](system.md)
 - [タイマー](timer.md)
 - [キー入力](keypad.md)
+- [カートリッジのプリフェッチ](prefetch.md)
+
+### カートリッジ
+
+- [カートリッジヘッダ](./cartridge/header.md)
+- [カートリッジROM](./cartridge/rom.md)
 
 ### CPU
 
