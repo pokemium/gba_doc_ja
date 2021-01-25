@@ -8,6 +8,7 @@
 - [メモリマップ](memory.md)
 - [DMA転送](dma.md)
 - [割り込み](interrupt.md)
+- [システム制御](system.md)
 - [タイマー](timer.md)
 - [キー入力](keypad.md)
 
