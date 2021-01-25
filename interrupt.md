@@ -1,0 +1,134 @@
+# 割り込み
+
+## 0x0400_0208 - IME - 割り込み有効フラグ (R/W)
+
+割り込み機能を使用するか使用しないかを設定します。 0か1を指定するだけです。
+
+設定が済んだ後、1にして割り込みを発生させます。
+
+ bit  |  内容
+---- | ----
+0 | 割り込み有効フラグ (0=全ての割り込み無効, 1=有効)
+1-31 | 未使用
+
+## 0x0400_0200 - IE - IRQ許可フラグ (R/W)
+
+許可する割り込みの種類を管理するフラグです。 0の場合、IRQは無視されます。
+
+例えば、VBlank割り込みを受け付けるためには `IME=1, IE=0bxxxx_xxxx_xxxx_xxx1`である必要があります。
+
+ bit  |  割り込み(1=有効)
+---- | ----
+0     | LCD V-Blank
+1     | LCD H-Blank
+2     | LCD V-Counter Match
+3     | Timer0 オーバーフロー
+4     | Timer1 オーバーフロー
+5     | Timer2 オーバーフロー
+6     | Timer3 オーバーフロー
+7     | シリアル通信
+8     | DMA 0
+9     | DMA 1
+10    | DMA 2
+11    | DMA 3
+12    | キー入力
+13    | Game Pak (external IRQ source)
+14-15 | 未使用
+
+## 0x0400_0202 - IF - IRQ発生フラグ / IRQ Acknowledge (R/W)
+
+発生した割り込みに対応するフラグが立てられます。
+
+ bit  |  割り込み(1=割り込み発生)
+---- | ----
+0     | LCD V-Blank
+1     | LCD H-Blank
+2     | LCD V-Counter Match
+3     | Timer0 オーバーフロー
+4     | Timer1 オーバーフロー
+5     | Timer2 オーバーフロー
+6     | Timer3 オーバーフロー
+7     | シリアル通信
+8     | DMA 0
+9     | DMA 1
+10    | DMA 2
+11    | DMA 3
+12    | キー入力
+13    | Game Pak (external IRQ source)
+14-15 | 未使用
+
+IRQ ビットに "1 "を書き込むことで、割り込みを手動で確認する必要があり、IRQ ビットはクリアされます。
+
+IMEをクリアしたりIEのフラグをクリアしているサイクルでは割り込みが起きることに注意してください。IEのフラグをクリアする場合は、割り込みチェックのミスマッチが発生しないようにIMEを事前にクリアしておくことをお勧めします。
+
+## BIOS割り込み
+
+割り込みが実行されると、CPUはIRQモードに切り替わり、`0x0000_00018`の割り込みベクタが呼び出されます。このアドレスはBIOS内にあるので、BIOSは常に次のコードを実行してからユーザハンドラに制御を転送します。
+
+```asm
+  00000018  b      128h                ; IRQベクタ(BIOSハンドラにジャンプ)
+  00000128  stmfd  r13!,r0-r3,r12,r14  ; レジスタをSP_irqに退避
+  0000012C  mov    r0,4000000h         ; ptr+4 to 03FFFFFC (mirror of 03007FFC)
+  00000130  add    r14,r15,0h          ; retadr for USER handler $+8=138h
+  00000134  ldr    r15,[r0,-4h]        ; jump to [03FFFFFC] USER handler
+  00000138  ldmfd  r13!,r0-r3,r12,r14  ; SP_irqに退避したレジスタを復帰
+  0000013C  subs   r15,r14,4h          ; IRQからリターン (PC=LR-4, CPSR=SPSR)
+```
+
+上のコードにあるように、ユーザー定義割り込みハンドラのアドレスは`0x0300_7FFC`に格納されています。
+
+デフォルトでは、WRAMの`0x0300_7F00-0x0300_7F9F`は割り込みスタックとして予約されています。
+
+## ユーザー定義割り込みハンドラで行うべきこと
+
+- 必要ならば、手動でTHUMBステートにスイッチしてください(ハンドラはARMステートで呼び出されます)
+- Determine reason(s) of interrupt by examining IF register
+- User program may freely assign priority to each reason by own logic
+- Process the most important reason of your choice
+- User MUST manually acknowledge by writing to IF register
+- もしネストした割り込みを許可したいなら、SPSR_irqをスタックに保存してIRQを有効化してください
+- If using other registers than BIOS-pushed R0-R3, manually save R4-R11 also.
+- Note that Interrupt Stack is used (which may have limited size)
+- So, for memory consuming stack operations use system mode (=user stack).
+- When calling subroutines in system mode, save LSR_usr also.
+- Restore SPSR_irq and/or R4-R11 if you've saved them above.
+- Finally, return to BIOS handler by BX LR (R14_irq) instruction.
+
+## 0x0300_7fxx(ミラー: 0x03ff_ffxx)
+
+次は、デフォルトで`0x0300_7fxx`がどのように使われるかを示したものです。
+
+アドレス | サイズ | 内容
+---- | ---- | ---- 
+0x0300_7FFC | 4   | Pointer to user IRQ handler (32bit ARM code)
+0x0300_7FF8 | 2   | Interrupt Check Flag (for IntrWait/VBlankIntrWait functions)
+0x0300_7FF4 | 4   | Allocated Area
+0x0300_7FF0 | 4   | サウンドバッファのアドレスを格納する
+0x0300_7FE0 | 16  | Allocated Area
+0x0300_7FA0 | 64  | Default area for SP_svc Supervisor Stack (4 words/time)
+0x0300_7F00 | 160 | Default area for SP_irq Interrupt Stack (6 words/time)
+~0x0300_7F00 | -- | これ以降はユーザー用のスタック 
+
+`0x0300_7F00`以下のメモリは、ユーザスタックとユーザデータのための空きメモリです。3つのスタックポインタは、それぞれの領域の先頭で初期化されます。
+
+- SP_svc = `0x0300_7FE0`
+- SP_irq = `0x0300_7FA0`
+- SP_usr = `0x0300_7F00`
+
+ユーザーはこれらのアドレスを再定義してスタックを他の場所に移動することができますが、`7FE0-7FFF`のシステムデータ用のアドレスは固定されています。
+
+## ユーザーが自由に使えるレジスタ
+
+R8-R12_fiq, R13_fiq, R14_fiq, SPSR_fiq, R13-R14_abt, SPSR_abt, R13-R14_und, SPSR_und
+
+## 高速割り込み (FIQ)
+
+ARM CPUは、IRQとFIQの2つの割り込みソースを提供しています。
+
+**GBAではIRQのみを使用します。**
+
+通常のGBAでは、FIQ信号はVDD35にショートカットされており、常にハイになっており、ハードウェアでFIQを生成する方法はありません。
+
+レジスタR8-R12_fiqはソフトウェアで使用することができます（CPSRに書き込むことでFIQモードに切り替える場合） 
+
+しかし、このようなゲームはハードウェアデバッガ（デバッグ目的でFIQを使用していると報告されている）がうまく動作しない可能性があることに注意してください。
