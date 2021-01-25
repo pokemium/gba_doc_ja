@@ -8,6 +8,7 @@
 - [メモリマップ](memory.md)
 - [DMA転送](dma.md)
 - [タイマー](timer.md)
+- [キー入力](keypad.md)
 
 ### CPU
 
@@ -29,7 +30,7 @@
 
 ## References
 
-- [情報システム設計演習－携帯型ゲームプログラミング－](http://jaco.ec.t.kanazawa-u.ac.jp/edu/GBA/)
 - [GBATEK](https://web.archive.org/web/20210108175702/https://problemkaputt.de/gbatek.htm)
 - [GBA develop Wiki](http://akkera102.sakura.ne.jp/gbadev/)
+- [情報システム設計演習－携帯型ゲームプログラミング－](http://jaco.ec.t.kanazawa-u.ac.jp/edu/GBA/)
 
