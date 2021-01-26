@@ -25,6 +25,7 @@
   - [ALU](./arm7tdmi/alu.md)
   - [分岐命令](arm7tdmi/branch.md)
   - [乗算](./arm7tdmi/multiply.md)
+  - [ロード/ストア](arm7tdmi/loadstore.md)
   - [プロセッサ状態](./arm7tdmi/psr.md)
 - [条件](arm7tdmi/cond.md)
 - [例外](arm7tdmi/exception.md)
