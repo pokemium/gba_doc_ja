@@ -29,9 +29,9 @@ Game Pak = カートリッジのことです。
 
 アドレス | サイズ | バス幅 | 名称 | 備考
 ---- | ---- | ---- | ---- | ----
-08000000-09FFFFFF | 32MB | -- | Game Pak ROM/FlashROM | WaitState 0
-0A000000-0BFFFFFF | 32MB | -- | Game Pak ROM/FlashROM | WaitState 1
-0C000000-0DFFFFFF | 32MB | -- | Game Pak ROM/FlashROM | WaitState 2
+08000000-09FFFFFF | 32MB | 16bit | Game Pak ROM/FlashROM | WaitState 0
+0A000000-0BFFFFFF | 32MB | 16bit | Game Pak ROM/FlashROM | WaitState 1
+0C000000-0DFFFFFF | 32MB | 16bit | Game Pak ROM/FlashROM | WaitState 2
 0E000000-0E00FFFF | 64KB | 8bit | SRAM | --
 0E010000-0FFFFFFF | -- | -- | 未使用 | -- 
 
