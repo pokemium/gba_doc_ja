@@ -16,9 +16,12 @@ BL, BLX_immはサブルーチンの`コール`つまりリターンアドレス�
 23-0 | nn - 符号付きオフセット(1ごとにつき4バイト)
 
 オペコードは
-- 0: `B{cond} label     ; PC=PC+8+nn*4`
-- 1: `BL{cond} label    ; PC=PC+8+nn*4, LR=PC+4`
-- 2: `BLX label         ; PC=PC+8+nn*4+H*2, LR=PC+4, T=1`
+
+```
+0: B{cond} label        ; PC=PC+8+nn*4
+1: BL{cond} label       ; PC=PC+8+nn*4, LR=PC+4
+2: BLX label            ; PC=PC+8+nn*4+H*2, LR=PC+4, T=1
+```
 
 実行時間: 2S + 1N
 
