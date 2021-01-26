@@ -38,6 +38,7 @@
 - [BG伸縮回転](./lcd/bg_rotation_scaling.md)
 - [ウィンドウ](./lcd/window.md)
 - [モザイク](./lcd/mosaic.md)
+- [ブレンド](./lcd/brend.md)
 - [割り込み](./lcd/interrupt_and_status.md)
 
 ## References
