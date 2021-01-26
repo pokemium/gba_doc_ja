@@ -68,7 +68,7 @@ SWI/BKPT実行時の処理
 ```
   R14_svc=PC+4  or   R14_abt=PC+4         ; 復帰先のアドレスを退避
   SPSR_svc=CPSR  or  SPSR_abt=CPSR        ; CPSRを退避
-  CPSR=\${changed} or  CPSR=\${changed}   ; ARMステートのSVC/ABTモードに入りIRQを無効にする
+  CPSR=${changed} or  CPSR=${changed}   ; ARMステートのSVC/ABTモードに入りIRQを無効にする
   PC=VVVV0008h  or   PC=VVVV000Ch         ; SWI または プリフェッチアボート のベクタにジャンプする
 ```
 
