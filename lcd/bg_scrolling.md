@@ -1,6 +1,8 @@
 # 背景スクロール
 
-## 0x0400_0010 - BG0HOFS - BG0 Xオフセット & 0x0400_0012 - BG0VOFS - BG0 Yオフセット (W)
+## オフセットレジスタ
+
+### 0x0400_0010 - BG0HOFS - BG0 Xオフセット & 0x0400_0012 - BG0VOFS - BG0 Yオフセット (W)
 
 - BG0HOFS = BG0 の X方向(Horizontal) のオフセット(OFS)
 - BG0VOFS = BG0 の Y方向(Vertical) のオフセット(OFS)
@@ -14,15 +16,15 @@ BG0背景レイヤーの左上のピクセルの座標を指定します。
 
 ![offset](../img/scroll.jpg)
 
-## 0x0400_0014 - BG1HOFS - BG1 Xオフセット & 0x0400_0016 - BG1VOFS - BG1 Yオフセット (W)
+### 0x0400_0014 - BG1HOFS - BG1 Xオフセット & 0x0400_0016 - BG1VOFS - BG1 Yオフセット (W)
 
 BG1背景レイヤーの左上のピクセルの座標を指定します。
 
-## 0x0400_0018 - BG2HOFS - BG2 Xオフセット & 0x0400_001a - BG2VOFS - BG2 Yオフセット (W)
+### 0x0400_0018 - BG2HOFS - BG2 Xオフセット & 0x0400_001a - BG2VOFS - BG2 Yオフセット (W)
 
 BG2背景レイヤーの左上のピクセルの座標を指定します。
 
-## 0x0400001c - BG3HOFS - BG3 Xオフセット && 0x0400001e - BG3VOFS - BG3 Yオフセット (W)
+### 0x0400001c - BG3HOFS - BG3 Xオフセット && 0x0400001e - BG3VOFS - BG3 Yオフセット (W)
 
 BG3背景レイヤーの左上のピクセルの座標を指定します。
 
