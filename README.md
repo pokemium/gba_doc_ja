@@ -36,6 +36,7 @@
 - [BG制御レジスタ](./lcd/bg_control.md)
 - [BGスクロール](./lcd/bg_scrolling.md)
 - [BG伸縮回転](./lcd/bg_rotation_scaling.md)
+- [ウィンドウ](./lcd/window.md)
 - [割り込み](./lcd/interrupt_and_status.md)
 
 ## References
