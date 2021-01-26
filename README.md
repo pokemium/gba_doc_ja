@@ -34,6 +34,7 @@
 - [LCD制御レジスタ](./lcd/lcd_control.md)
 - [BGモード](./lcd/bg_mode.md)
 - [BG制御レジスタ](./lcd/bg_control.md)
+- [BGスクロール](./lcd/bg_scrolling.md)
 - [割り込み](./lcd/interrupt_and_status.md)
 
 ## References
