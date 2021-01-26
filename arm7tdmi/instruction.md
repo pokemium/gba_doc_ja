@@ -40,6 +40,17 @@ Add x=1I cycles if Op2 shifted-by-register. Add y=1S+1N cycles if Rd=R15.
 
  命令  |  サイクル | フラグ | 処理内容
 ---- | ---- | ---- | ----
+MUL{cond}{S} Rd,Rm,Rs          | 1S+mI    | NZx- | Rd = Rm×Rs
+MLA{cond}{S} Rd,Rm,Rs,Rn       | 1S+mI+1I | NZx- | Rd = Rm×Rs+Rn
+UMULL{cond}{S} RdLo,RdHi,Rm,Rs | 1S+mI+1I | NZx- | RdHiLo = Rm×Rs
+UMLAL{cond}{S} RdLo,RdHi,Rm,Rs | 1S+mI+2I | NZx- | RdHiLo = Rm×Rs+RdHiLo
+SMULL{cond}{S} RdLo,RdHi,Rm,Rs | 1S+mI+1I | NZx- | RdHiLo = Rm×Rs
+SMLAL{cond}{S} RdLo,RdHi,Rm,Rs | 1S+mI+2I | NZx- | RdHiLo = Rm×Rs+RdHiLo
+
+## ロード/ストア
+
+ 命令  |  サイクル | フラグ | 処理内容
+---- | ---- | ---- | ----
 LDR{cond}{B}{T} Rd,\${Addr}     | 1S+1N+1I+y | ---- | Rd=\[Rn+/-${offset}\]
 LDR{cond}H      Rd,${Addr}     | 1S+1N+1I+y | ---- | Load Unsigned halfword
 LDR{cond}D      Rd,${Addr}     |            | ---- | Load Dword ARMv5TE
@@ -51,7 +62,6 @@ STR{cond}H      Rd,${Addr}     | 2N         | ---- | Store halfword
 STR{cond}D      Rd,${Addr}     |            | ---- | Store Dword ARMv5TE
 STM{cond}{amod} Rn{!},${Rlist}{^} | (n-1)S+2N  | ---- | Store Multiple
 SWP{cond}{B}    Rd,Rm,\[Rn]       | 1S+2N+1I   | ---- | Rd=\[Rn], \[Rn]=Rm
-PLD             ${Addr}        | 1S         | ---- | Prepare Cache ARMv5TE
 
 For LDR/LDM, add y=1S+1N if Rd=R15, or if R15 in Rlist.
 

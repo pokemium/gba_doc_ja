@@ -1,6 +1,6 @@
 # ALU
 
-## 命令のフォーマット
+## 📜 命令のフォーマット
 
 ### bit25(I)が0 つまり 2個目のオペランドがレジスタの場合
 
@@ -58,7 +58,7 @@
 0x0e | BIC{cond}{S} Rd,Rn,Op2 | Rd = Rn AND NOT Op2
 0x0f | MVN{cond}{S} Rd,Op2 | Rd = NOT Op2
 
-## 2個目のオペランド(Op2)
+## 🔴 2個目のオペランド(Op2)
 
 25bitや11-0bitを見るとわかるように2個目のオペランドは基本的に、シフトされたレジスタ値かシフトされた即値となります。
 
@@ -66,7 +66,7 @@
 - シフトされるレジスタ: `Rm,SSS#Is` または `Rm,SSS Rs`と表されます (SSS=LSL/LSR/ASR/ROR)
 - 即値: `#000NN000h`のように表します。(このとき `#0NNh,ROR#0ssh`), for example: "#000NN000h", assembler should automatically convert into "#0NNh,ROR#0ssh" as far as possible (ie. as far as a section of not more than 8bits of the immediate is non-zero).
 
-## シフト量が0 (シフト量が即値の0で表されるとき)
+## 🔴 シフト量が0 (シフト量が即値の0で表されるとき)
 
 ```
  LSL#0: シフトは行われません。 つまり、Op2=Rmとなりキャリーの値は不変です。
@@ -75,7 +75,7 @@
  ROR#0: ROR#1 と同様に RRX#1 (RCR) と解釈されますが、Op2の31bitは古いキャリーの値になります。
 ```
 
-## CPSRフラグの変更
+## 🚩 CPSRフラグの変更
 
 ###  S=1, Rd≠R15, 論理命令 のとき:
 
@@ -119,7 +119,7 @@
 
 フラグは全部不変
 
-## 補足
+## 🔎 補足
 
 **実行時間**
 
