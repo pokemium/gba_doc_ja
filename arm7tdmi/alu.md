@@ -64,7 +64,7 @@
 
 - シフトされないレジスタ: Op2は`Rm`と表記されます、アセンブラでは`Rm,LSL#0`と表されます。
 - シフトされるレジスタ: `Rm,SSS#Is` または `Rm,SSS Rs`と表されます (SSS=LSL/LSR/ASR/ROR)
-- 即値: Specify as 32bit value, for example: "#000NN000h", assembler should automatically convert into "#0NNh,ROR#0ssh" as far as possible (ie. as far as a section of not more than 8bits of the immediate is non-zero).
+- 即値: `#000NN000h`のように表します。(このとき `#0NNh,ROR#0ssh`), for example: "#000NN000h", assembler should automatically convert into "#0NNh,ROR#0ssh" as far as possible (ie. as far as a section of not more than 8bits of the immediate is non-zero).
 
 ## シフト量が0 (シフト量が即値の0で表されるとき)
 
@@ -75,34 +75,60 @@
  ROR#0: ROR#1 と同様に RRX#1 (RCR) と解釈されますが、Op2の31bitは古いキャリーの値になります。
 ```
 
-## R15(PC)の使用
+## CPSRフラグの変更
 
-When using R15 as Destination (Rd), note below CPSR description and Execution time description.
+###  S=1, Rd≠R15, 論理命令 のとき:
 
-When using R15 as operand (Rm or Rn), the returned value depends on the instruction: PC+12 if I=0,R=1 (shift by register), otherwise PC+8 (shift by immediate).
+該当するのは、AND,EOR,TST,TEQ,ORR,MOV,BIC,MVN
+  
+- V = 不変
+- C = シフト処理の場合のみ、キャリー (LSL#0 や Rs=0x00 の場合は不変)
+- Z = 演算結果がゼロ
+- N = 演算結果がマイナス(bit31が1)
 
-## Returned CPSR Flags
+### S=1, Rd≠R15, 算術命令 のとき:
 
-If S=1, Rd<>R15, logical operations (AND,EOR,TST,TEQ,ORR,MOV,BIC,MVN):
-  V=not affected
-  C=carryflag of shift operation (not affected if LSL#0 or Rs=00h)
-  Z=zeroflag of result
-  N=signflag of result (result bit 31)
-If S=1, Rd<>R15, arithmetic operations (SUB,RSB,ADD,ADC,SBC,RSC,CMP,CMN):
-  V=overflowflag of result
-  C=carryflag of result
-  Z=zeroflag of result
-  N=signflag of result (result bit 31)
-IF S=1, with unused Rd bits=1111b, {P} opcodes (CMPP/CMNP/TSTP/TEQP):
-  R15=result  ;modify PSR bits in R15, ARMv2 and below only.
-  In user mode only N,Z,C,V bits of R15 can be changed.
-  In other modes additionally I,F,M1,M0 can be changed.
-  The PC bits in R15 are left unchanged in all modes.
-If S=1, Rd=R15; should not be used in user mode:
-  CPSR = SPSR_${current mode}
-  PC = result
-  For example: MOVS PC,R14  ;return from SWI (PC=R14_svc, CPSR=SPSR_svc).
-If S=0: Flags are not affected (not allowed for CMP,CMN,TEQ,TST).
+該当するのは、SUB,RSB,ADD,ADC,SBC,RSC,CMP,CMN
 
-The instruction "MOV R0,R0" is used as "NOP" opcode in 32bit ARM state.
-Execution Time: (1+p)S+rI+pN. Whereas r=1 if I=0 and R=1 (ie. shift by register); otherwise r=0. And p=1 if Rd=R15; otherwise p=0.
+- V = 演算結果がオーバーフローしたか
+- C = 演算結果のキャリー
+- Z = 演算結果がゼロ
+- N = 演算結果がマイナス(bit31が1)
+
+### S=1, with unused Rd bits=1111b, オペコードが CMPP/CMNP/TSTP/TEQP のとき:
+
+- R15=result  ;modify PSR bits in R15, ARMv2 and below only.
+- In user mode only N,Z,C,V bits of R15 can be changed.
+- In other modes additionally I,F,M1,M0 can be changed.
+- The PC bits in R15 are left unchanged in all modes.
+
+### S=1, Rd=R15 のとき:
+
+ユーザーモード以外からユーザーモードに復帰する用途などで用いる
+
+- CPSR = SPSR_${current_mode}
+- PC = 処理結果
+
+例:
+
+```
+  MOVS PC,R14  ; SWIからの復帰 (PC=R14_svc, CPSR=SPSR_svc)
+```
+
+### S=0 のとき
+
+フラグは全部不変
+
+## 補足
+
+**実行時間**
+
+実行時間: (1+p)S+rI+pN
+
+r: 1 (I==0 && R==1 つまりシフト量にレジスタの値を使う場合) or 0(それ以外)
+p: 1 (Rd==R15) or 0(それ以外)
+
+**NOP**
+
+ARMステートでは`MOV R0, R0`を`NOP`命令として扱う
+
