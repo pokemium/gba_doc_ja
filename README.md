@@ -35,6 +35,7 @@
 - [BGモード](./lcd/bg_mode.md)
 - [BG制御レジスタ](./lcd/bg_control.md)
 - [BGスクロール](./lcd/bg_scrolling.md)
+- [BG伸縮回転](./lcd/bg_rotation_scaling.md)
 - [割り込み](./lcd/interrupt_and_status.md)
 
 ## References
@@ -42,4 +43,4 @@
 - [GBATEK](https://web.archive.org/web/20210108175702/https://problemkaputt.de/gbatek.htm)
 - [GBA develop Wiki](http://akkera102.sakura.ne.jp/gbadev/)
 - [情報システム設計演習－携帯型ゲームプログラミング－](http://jaco.ec.t.kanazawa-u.ac.jp/edu/GBA/)
-
+- [ultimate-tutorial-2](https://tutorial.feuniverse.us/)
