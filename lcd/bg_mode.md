@@ -51,7 +51,7 @@ GBAは96KBのVRAMを`0x0600_0000-0x0601_7fff`に持っています。VRAMの使�
 
 ### BGモード3 (ビットマップモード for still images)
 
-- `0x0600_0000-0x0601_3FFF`:  80 KBytes Frame 0 buffer (only 75K actually used)
+- `0x0600_0000-0x0601_3FFF`:  80KBのフレームバッファ0 (使えるのは75KB)
 - `0x0601_4000-0x0601_7FFF`:  16KBでOBJタイルデータが格納
 
 - サイズ(px): 240×160
