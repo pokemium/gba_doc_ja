@@ -4,7 +4,7 @@
 
 オペコードの末尾に`{cond}`をつけるとCPSRレジスタのC,N,Z,Vフラグに基づいて実行されるかされないかが変わってきます。
 
-例えば、BEQは Branch if Equal の略でZフラグが立っているときに分岐し、MOVMIは Move if Singed の略です。
+例えば、BEQは Branch if Equal の略でZフラグが立っているときに分岐し、MOVMIは Move if Singed の略でNフラグが立っている時に実行されます。
 
 ARMステートのとき、`{cond}`はすべてのオペコードで使うことができます。 THUMBステートでは`{cond}`は分岐命令でのみ使用できます。
 
@@ -14,8 +14,8 @@ ARMステートのとき、`{cond}`はすべてのオペコードで使うこと
 1 | NE | Z=0 | 値が異なる、非0
 2 | CS/HS | C=1 |  unsigned higher or same (carry set)
 3 | CC/LO | C=0         | unsigned lower (carry cleared)
-4 | MI    | N=1         | signed negative (minus)
-5 | PL    | N=0         | signed positive or zero (plus)
+4 | MI    | N=1         | 前の処理結果が負
+5 | PL    | N=0         | 前の処理結果が0以上
 6 | VS    | V=1         | signed overflow (V set)
 7 | VC    | V=0         | signed no overflow (V cleared)
 8 | HI    | C=1 && Z=0 | unsigned higher
@@ -29,7 +29,7 @@ F | NV    | -           | never (ARMv1,v2 only) (Reserved ARMv3 and up)
 
 実行時間
 
-- 条件が満たされた: それぞれのオペコードの実行時間
+- 条件が満たされた時: それぞれのオペコードの実行時間
 - 条件が満たされなかった時: 1S
 
 ## CPSR
