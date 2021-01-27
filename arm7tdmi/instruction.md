@@ -55,7 +55,6 @@ SMLAL{cond}{S} RdLo,RdHi,Rm,Rs | 1S+mI+2I | NZx- | RdHiLo = Rm×Rs+RdHiLo
 ---- | ---- | ---- | ----
 LDR{cond}{B}{T} Rd,\${Addr}     | 1S+1N+1I+y | ---- | Rd=\[Rn+/-${offset}\]
 LDR{cond}H      Rd,${Addr}     | 1S+1N+1I+y | ---- | Load Unsigned halfword
-LDR{cond}D      Rd,${Addr}     |            | ---- | Load Dword ARMv5TE
 LDR{cond}SB     Rd,${Addr}     | 1S+1N+1I+y | ---- | Load Signed byte
 LDR{cond}SH     Rd,${Addr}     | 1S+1N+1I+y | ---- | Load Signed halfword
 LDM{cond}{amod} Rn{!},${Rlist}{^} | nS+1N+1I+y | ---- | Load Multiple
@@ -79,4 +78,3 @@ SWI{cond} Imm24bit        | 2S+1N    | ---- | PC=8, ARM Svc mode, LR=$+4
 The Undefined Instruction | 2S+1I+1N | ---- | PC=4, ARM Und mode, LR=$+4
 cond=false                | 1S       | ---- | Any opcode with condition=false
 NOP                       | 1S       | ---- | R0=R0
-CLZ{cond} Rd,Rm           | ???      | ----  | Count Leading Zeros ARMv5
