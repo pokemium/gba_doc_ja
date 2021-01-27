@@ -17,11 +17,10 @@ BIC{cond}{S} Rd,Rn,Op2 | 1S+x+y | NZc-  | Rd = Rn AND NOT Op2
 TST{cond}{P}    Rn,Op2 | 1S+x   | NZc-  | Void = Rn AND Op2
 TEQ{cond}{P}    Rn,Op2 | 1S+x   | NZc-  | Void = Rn XOR Op2
 
-Add x=1I cycles if Op2 shifted-by-register. Add y=1S+1N cycles if Rd=R15.
+- Op2がレジスタによってシフトされる場合、`x=1I`となります。
+- `Rd=R15`の場合、`y=1S+1N`となります。
 
-Op2がレジスタによってシフトされた即値だったときは x(1I)サイクルを加えます。RdがR15だったときはy(1S+1N)サイクルを加えます。
-
-キャリーフラグはOp2のシフト量が1以上のときに変更される可能性があります。
+キャリーフラグはOp2のシフト量が1以上のときに更新されます。
 
 ## 算術演算
 
@@ -36,7 +35,8 @@ RSC{cond}{S} Rd,Rn,Op2 | 1S+x+y | NZCV | Rd = Op2-Rn+Cy-1
 CMP{cond}{P}    Rn,Op2 | 1S+x   | NZCV | Void = Rn-Op2
 CMN{cond}{P}    Rn,Op2 | 1S+x   | NZCV | Void = Rn+Op2
 
-Add x=1I cycles if Op2 shifted-by-register. Add y=1S+1N cycles if Rd=R15.
+- Op2がレジスタによってシフトされる場合、`x=1I`となります。
+- `Rd=R15`の場合、`y=1S+1N`となります。
 
 ## 乗算
 
@@ -65,7 +65,7 @@ STR{cond}D      Rd,${Addr}     |            | ---- | Store Dword ARMv5TE
 STM{cond}{amod} Rn{!},${Rlist}{^} | (n-1)S+2N  | ---- | Store Multiple
 SWP{cond}{B}    Rd,Rm,\[Rn]       | 1S+2N+1I   | ---- | Rd=\[Rn], \[Rn]=Rm
 
-For LDR/LDM, add y=1S+1N if Rd=R15, or if R15 in Rlist.
+LDR/LDMでは、`Rd=R15` または `R15 in Rlist` のとき、`y=1S+1N` となります。
 
 ## ジャンプ、コール、CPSRモード、その他
 
