@@ -1,8 +1,8 @@
 # ロード/ストア命令 その2
 
-ロード/ストア命令のうち、LDRH, LDRSB, LDRSH, STRHについて解説する
+ロード/ストア命令のうち、LDRH, LDRSB, LDRSH, STRHについて解説します
 
-LDRとSTRは転送単位がWord(32bit)かByte(8bit)だったが、こちらは
+LDRとSTRは転送単位がWord(32bit)かByte(8bit)でしたが、こちらは
 
 ```
 LDRH = LDR + Halfword
@@ -11,7 +11,7 @@ LDRSH = LDR + Signed Halfword
 STRH = STR + Halfword
 ```
 
-のとおり転送単位や符号が異なる
+のとおり転送単位や符号が異なります
 
 ## 📜 命令のフォーマット
 

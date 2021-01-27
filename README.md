@@ -26,6 +26,7 @@
   - [分岐命令](arm7tdmi/branch.md)
   - [乗算](./arm7tdmi/multiply.md)
   - [ロード/ストア](arm7tdmi/loadstore.md)
+  - [ロード/ストア その2](arm7tdmi/loadstore2.md)
   - [プロセッサ状態](./arm7tdmi/psr.md)
 - [条件](arm7tdmi/cond.md)
 - [例外](arm7tdmi/exception.md)
