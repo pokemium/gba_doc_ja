@@ -31,6 +31,7 @@
   - [プロセッサ状態](./arm7tdmi/psr.md)
 - [THUMB命令一覧](./arm7tdmi/thumb/instruction.md)
   - [ロード/ストア](./arm7tdmi/thumb/loadstore.md)
+- [サイクル](arm7tdmi/cycle.md)
 - [条件](arm7tdmi/cond.md)
 - [例外](arm7tdmi/exception.md)
 
