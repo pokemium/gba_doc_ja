@@ -4,6 +4,8 @@ LDR, STR が該当します
 
 LDRH, LDRSB, LDRSH, STRH は [その2](./loadstore2.md)で解説しています。
 
+LDM, STM は [その3](./loadstore3.md)で解説しています。
+
 ## 📜 命令のフォーマット
 
 ### LDR
