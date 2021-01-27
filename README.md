@@ -21,7 +21,7 @@
 ### CPU
 
 - [レジスタ](./arm7tdmi/register.md)
-- [命令一覧](arm7tdmi/instruction.md)
+- [ARM命令一覧](arm7tdmi/instruction.md)
   - [ALU](./arm7tdmi/alu.md)
   - [分岐命令](arm7tdmi/branch.md)
   - [乗算](./arm7tdmi/multiply.md)
@@ -29,6 +29,8 @@
   - [ロード/ストア その2](arm7tdmi/loadstore2.md)
   - [ロード/ストア その3](arm7tdmi/loadstore3.md)
   - [プロセッサ状態](./arm7tdmi/psr.md)
+- [THUMB命令一覧](./arm7tdmi/thumb/instruction.md)
+  - [ロード/ストア](./arm7tdmi/thumb/loadstore.md)
 - [条件](arm7tdmi/cond.md)
 - [例外](arm7tdmi/exception.md)
 
@@ -50,3 +52,4 @@
 - [GBA develop Wiki](http://akkera102.sakura.ne.jp/gbadev/)
 - [情報システム設計演習－携帯型ゲームプログラミング－](http://jaco.ec.t.kanazawa-u.ac.jp/edu/GBA/)
 - [ultimate-tutorial-2](https://tutorial.feuniverse.us/)
+- [ARM7TDMI](https://ngmansion.github.io/hokanko/ARM7TDMI/)
