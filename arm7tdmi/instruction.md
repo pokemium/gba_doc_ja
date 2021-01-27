@@ -61,7 +61,6 @@ LDR{cond}SH     Rd,${Addr}     | 1S+1N+1I+y | ---- | Load Signed halfword
 LDM{cond}{amod} Rn{!},${Rlist}{^} | nS+1N+1I+y | ---- | Load Multiple
 STR{cond}{B}{T} Rd,\${Addr}     | 2N         | ---- | \[Rn+/-${offset}]=Rd
 STR{cond}H      Rd,${Addr}     | 2N         | ---- | Store halfword
-STR{cond}D      Rd,${Addr}     |            | ---- | Store Dword ARMv5TE
 STM{cond}{amod} Rn{!},${Rlist}{^} | (n-1)S+2N  | ---- | Store Multiple
 SWP{cond}{B}    Rd,Rm,\[Rn]       | 1S+2N+1I   | ---- | Rd=\[Rn], \[Rn]=Rm
 
@@ -74,17 +73,10 @@ LDR/LDMでは、`Rd=R15` または `R15 in Rlist` のとき、`y=1S+1N` とな�
 B{cond}   label           | 2S+1N    | ---- | PC=$+8+/-32M
 BL{cond}  label           | 2S+1N    | ---- | PC=\$+8+/-32M, LR=$+4
 BX{cond}  Rn              | 2S+1N    | ---- | PC=Rn, T=Rn.0 (THUMB/ARM)
-BLX{cond} Rn              | 2S+1N    | ---- | PC=Rn, T=Rn.0, LR=PC+4, ARM9
-BLX       label           | 2S+1N    | ---- | PC=PC+\$+/-32M, LR=$+4, T=1, ARM9
 MRS{cond} Rd,Psr          | 1S       | ---- | Rd=Psr
 MSR{cond} Psr{_field},Op  | 1S       | (psr) | Psr\[field]=Op
 SWI{cond} Imm24bit        | 2S+1N    | ---- | PC=8, ARM Svc mode, LR=$+4
-BKPT      Imm16bit        | ???      | ---- | PC=C, ARM Abt mode, LR=$+4 ARM9
 The Undefined Instruction | 2S+1I+1N | ---- | PC=4, ARM Und mode, LR=$+4
 cond=false                | 1S       | ---- | Any opcode with condition=false
 NOP                       | 1S       | ---- | R0=R0
 CLZ{cond} Rd,Rm           | ???      | ----  | Count Leading Zeros ARMv5
-QADD{cond} Rd,Rm,Rn       |          | ----q | Rd=Rm+Rn       ARMv5TE(xP)
-QSUB{cond} Rd,Rm,Rn       |          | ----q | Rd=Rm-Rn       ARMv5TE(xP)
-QDADD{cond} Rd,Rm,Rn      |          | ----q | Rd=Rm+Rn*2     ARMv5TE(xP)
-QDSUB{cond} Rd,Rm,Rn      |          | ----q | Rd=Rm-Rn*2     ARMv5TE(xP)
