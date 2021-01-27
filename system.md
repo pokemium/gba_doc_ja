@@ -32,28 +32,33 @@ WAITCNTは起動時には0x0000_0000です。
 
 となります。
 
-ファーストアクセス(ノンシーケンシャル)に要するサイクル(N0, N1, N2)とセカンドアクセス(シーケンシャル)に要するサイクル(S0, S1, S2)は、NとSサイクルのウェイトステートと呼ばれていて、実際のアクセス時間はウェイトステートのサイクルに1を加えたものです。
+ファーストアクセス(ノンシーケンシャル)に要するサイクル(N0, N1, N2)とセカンドアクセス(シーケンシャル)に要するサイクル(S0, S1, S2)は、NとSサイクルのWaitStateと呼ばれていて、実際のアクセス時間はWaitStateのサイクルに1を加えたものです。
 
-また、GamePakは16ビットのデータバスを使用しているため、32ビットアクセスは2つの16ビットアクセスに分割されます（最初の16bitがノンシーケンシャルであっても、残りの16bitは常にシーケンシャルです）。
+また、Game Pakは16ビットのデータバスを使用しているため、32ビットアクセスは2つの16ビットアクセスに分割されます。 最初の16bitがノンシーケンシャルであっても、残りの16bitは常にシーケンシャルです
 
-NOTES: GBAはカートリッジROMの各128Kブロックの先頭にアクセスする際には強制的にノンシーケンシャルアクセスします。 またPHI端子出力(Gamepak BusのPHIピン)は無効にしてください。
+注意:  
+GBAはカートリッジROMの各128Kブロックの先頭にアクセスする際には強制的にノンシーケンシャルアクセスします。 またPHI端子出力(Gamepak BusのPHIピン)は無効にしてください。
 
 ## 0x0400_0300 - POSTFLG - BYTE - Undocumented - Post Boot / Debug Control (R/W)
 
-最初のリセット後、BIOSはレジスタを0x01に初期化しリセットベクタ(0x000000)をさらに実行しますが、このときレジスタがまだ0x01に設定されていることを感知すると、デバッグベクタ(0x0000_001c)に制御を渡します。
+最初のリセット後、BIOSはこのレジスタを0x01に初期化しリセットベクタ(0x000000)をさらに実行します。
+
+このときレジスタがまだ0x01に設定されていることを感知すると、デバッグベクタ(0x0000_001c)に制御を渡します。
 
  bit  |  内容
 ----- | -----
 0 | Undocumented. First Boot Flag  (0=First, 1=Further)
 1-7 | Undocumented. Not used.
 
-Normally the debug handler rejects control unless it detects Debug flags in cartridge header, in that case it may redirect to a cut-down boot procedure (bypassing Nintendo logo and boot delays, much like nocash burst boot for multiboot software). I am not sure if it is possible to reset the GBA externally without automatically resetting register 300h though.
+Normally the debug handler rejects control unless it detects Debug flags in cartridge header, in that case it may redirect to a cut-down boot procedure (bypassing Nintendo logo and boot delays, much like nocash burst boot for multiboot software). 
+
+I am not sure if it is possible to reset the GBA externally without automatically resetting register 300h though.
 
 ## 0x0400_0301 - HALTCNT - BYTE - Undocumented - 省電力モード制御レジスタ (W)
 
 このレジスタに書き込みを行うことでGBAは省電力モードに移行します。
 
-Haltモードでは、CPUは `IE & IF = 0`の限りHaltし続けます。 これはCPUが割り込みを待つ間に電力消費を抑えるために使われます。
+Haltモードでは、`IE & IF = 0`の限りCPUが停止し続けます。 これはCPUが割り込みを待つ間に電力消費を抑えるために使われます。
 
 Stopモードは、サウンドや画面を含めたほとんどのハードウェアが停止します。
 
@@ -61,8 +66,6 @@ Stopモードは、サウンドや画面を含めたほとんどのハードウ�
 ----- | -----
 0-6 | 未使用
 7   | 省電力モード  (0=Halt, 1=Stop)
-
-The current GBA BIOS addresses only the upper eight bits of this register (by writing 00h or 80h to address 04000301h), however, as the register isn't officially documented, some or all of the bits might have different meanings in future GBA models.
 
 **基本的に、このレジスタに直接書き込むよりも BIOS関数 SWI2(Halt) または SWI3(Stop) を使用することが一般的に推奨されます。**
 
