@@ -72,12 +72,7 @@ Rsレジスタの
 - 31-24bitが全て1: m=3
 - それ以外: m=4
 
-S=1のときに更新されるフラグは
-
-- Z 演算結果が0
-- N 演算結果がマイナス
-- C 不変
-- V 不変
+フラグ(S=1): NZ
 
 ### MULL, MLAL
 
@@ -104,12 +99,7 @@ Rsレジスタの
 - 31-24bitが全て1: m=3
 - それ以外: m=4
 
-S=1のときに更新されるフラグは
-
-- Z 演算結果が0
-- N 演算結果がマイナス
-- C 不変
-- V 不変
+フラグ(S=1): NZ
 
 ### SMLAxy, SMLAWy, SMLALxy, SMULxy, SMULWy
 
@@ -131,11 +121,3 @@ NZCVフラグはハーフワード乗算のとき不変です。
 ### UMAAL
 
 GBAにはありません。
-
-UMAAL = `Unsigned Multiply Accumulate Accumulate Long`
-
-Multiply with two 32bit additions, supposed to be used for cryptography.
-
-フラグは全て不変
-
-ARMv6以上でサポートされます。

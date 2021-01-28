@@ -57,3 +57,4 @@
 - [情報システム設計演習－携帯型ゲームプログラミング－](http://jaco.ec.t.kanazawa-u.ac.jp/edu/GBA/)
 - [ultimate-tutorial-2](https://tutorial.feuniverse.us/)
 - [ARM7TDMI](https://ngmansion.github.io/hokanko/ARM7TDMI/)
+- [ARM のスタックについて](http://masahir0y.blogspot.com/2012/11/arm.html)
