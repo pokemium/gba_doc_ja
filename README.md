@@ -32,6 +32,8 @@
 - [THUMB命令一覧](./arm7tdmi/thumb/instruction.md)
   - [レジスタ操作](./arm7tdmi/thumb/register.md)
   - [ロード/ストア](./arm7tdmi/thumb/loadstore.md)
+  - [ロード/ストア その2](./arm7tdmi/thumb/loadstore2.md)
+  - [アドレッシング](./arm7tdmi/thumb/addressing.md)
 - [サイクル](arm7tdmi/cycle.md)
 - [条件](arm7tdmi/cond.md)
 - [例外](arm7tdmi/exception.md)
