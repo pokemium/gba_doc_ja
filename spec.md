@@ -4,10 +4,10 @@
 
 モード | 概要
 ---- | ----
-ARMモード |   ARM7TDMI 32bit RISC CPU, 16.78MHz, 32bit opcodes (GBA)
-THUMBモード |   ARM7TDMI 32bit RISC CPU, 16.78MHz, 16bit opcodes (GBA)
-CGBモード  |   GBZ80 8bit CPU, 4.2MHz or 8.4MHz  (CGB)
-DMGモード  |   GBZ80 8bit CPU, 4.2MHz (DMG)
+ARMモード |   ARM7TDMI 32bit RISC CPU, 16.78MHz, 32bit opcodes
+THUMBモード |   ARM7TDMI 32bit RISC CPU, 16.78MHz, 16bit opcodes
+CGBモード  |   GBZ80 8bit CPU, 4.2MHz or 8.4MHz
+DMGモード  |   GBZ80 8bit CPU, 4.2MHz
 
 ## 内部メモリ
 
@@ -32,7 +32,7 @@ OBJ size    | 12種類 (ピクセル単位で 8x8 から 64x64まで)
 OBJs/Screen | max. 128 OBJs of any size (up to 64x64 dots each)
 OBJs/Line   | max. 128 OBJs of 8x8 dots size (under best circumstances)
 Priorities  | OBJ/OBJ: 0-127, OBJ/BG: 0-3, BG/BG: 0-3
-Effects     | Rotation/Scaling, alpha blending, fade-in/out, mosaic, window
+Effects     | 画面に適用できるエフェクト。伸縮回転, ブレンド, モザイク, ウィンドウ
 Backlight   | GBASPのみ搭載
 
 ## サウンド
