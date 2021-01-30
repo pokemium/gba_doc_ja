@@ -88,7 +88,7 @@ OAMはOBJ0からOBJ127まで分けられています。各エントリは2バイ
  bit  |  内容
 ---- | ----
 0-8 | X座標 (0-511)
-9-13 | 伸縮回転パラメータ (後述, 0-31)
+9-13 | 伸縮回転パラメータ番号 (0-31)
 14-15 | OBJサイズ (0-3, Attr0のOBJ Shapeに依存)
 
 **伸縮回転が無効(Attr0のbit8が0)**
@@ -136,7 +136,7 @@ OBJウィンドウモードのときは、OBJは表示されず、代わりに�
 
 Attr2のbit0-9で指定するタイル番号は通常0-1023まで指定可能ですが、場合によっては制限が加わる時があります。
 
-- 256色/1パレットのとき: 偶数のタイル番号のみを使用することができ、タイル番号の下位ビットは0にする必要があります。 2次元マッピングモードでは、このビットは完全に無視されます。
+- 256色/1パレットのとき: 偶数のタイル番号のみを使用することができ、タイル番号の下位ビットは0にする必要があります。 2次元マッピングモード(後述)では、このビットは完全に無視されます。
 - BGモード3-5のときつまりビットマップモードのとき: タイル番号は512から1023までしか指定できません。これはOBJの下位16KBがフレームバッファとして使われているからです。0-511を指定したときは無視され非表示になります。
 
 #### 対BG優先度
@@ -153,5 +153,54 @@ OBJ同士の優先度と混同しないように注意してください。
 
 ### 伸縮回転パラメータ
 
-(Selects one of the 32 Rotation/Scaling Parameters that
-          can be defined in OAM, for details read next chapter.)
+上で述べたようにOAMの各エントリの間には空白の領域がありました。 これらの 128×16bit はOBJの伸縮回転パラメータを格納するのに使われます。
+
+#### Location of Rotation/Scaling Parameters in OAM
+
+4つの16bitパラメータ(PA,PB,PC,PD)で各OBJの伸縮回転に関するプロパティを定義しています。
+
+- 1st Group: PA=07000006, PB=0700000E, PC=07000016, PD=0700001E
+- 2nd Group: PA=07000026, PB=0700002E, PC=07000036, PD=0700003E
+- ...
+
+のように配置されています。
+
+伸縮回転パラメータ用のメモリ領域は全部で 128×16bitであり、1つのOBJにつき4×16bitなので全部で32OBJの伸縮回転パラメータを持つことができます。
+
+これはAttr1のbit9-13でOBJと紐づけられます。
+
+#### OBJ Rotation/Scaling PA,PB,PC,PD Parameters (R/W)
+
+Each OBJ that uses Rotation/Scaling may select between any of the above 32 parameter groups. 
+
+For details, refer to the previous chapter about OBJ Attributes.
+
+The meaning of the separate PA,PB,PC,PD values is identical as for BG, for details read the chapter about BG Rotation/Scaling.
+
+#### OBJ Reference Point & Rotation Center
+
+The OBJ Reference Point is the upper left of the OBJ, ie. OBJ X/Y coordinates: X+0, Y+0.
+
+The OBJ Rotation Center is always (or should be usually?) in the middle of the object, ie. for a 8x32 pixel OBJ, this would be at the OBJ X/Y coordinates: X+4, and Y+16.
+
+#### OBJ Double-Size Bit (for OBJs that use Rotation/Scaling)
+
+When Double-Size is zero: The sprite is rotated, and then display inside of the normal-sized (not rotated) rectangular area - the edges of the rotated sprite will become invisible if they reach outside of that area.
+
+When Double-Size is set: The sprite is rotated, and then display inside of the double-sized (not rotated) rectangular area - this ensures that the edges of the rotated sprite remain visible even if they would reach outside of the normal-sized area. (Except that, for example, rotating a 8x32 pixel sprite by 90 degrees would still cut off parts of the sprite as the double-size area isn't large enough.)
+
+### VRAM Character (Tile) Mapping
+
+Each OBJ tile consists of 8x8 dots, however, bigger OBJs can be displayed by combining several 8x8 tiles. The horizontal and vertical size for each OBJ may be separately defined in OAM, possible H/V sizes are 8,16,32,64 dots - allowing 'square' OBJs to be used (such like 8x8, 16x16, etc) as well as 'rectangular' OBJs (such like 8x32, 64x16, etc.)
+
+When displaying an OBJ that contains of more than one 8x8 tile, one of the following two mapping modes can be used. In either case, the tile number of the upperleft tile must be specified in OAM memory.
+
+#### Two Dimensional Character Mapping (DISPCNT Bit 6 cleared)
+
+This mapping mode assumes that the 1024 OBJ tiles are arranged as a matrix of 32x32 tiles / 256x256 pixels (In 256 color mode: 16x32 tiles / 128x256 pixels). Ie. the upper row of this matrix contains tiles 00h-1Fh, the next row tiles 20h-3Fh, and so on.
+For example, when displaying a 16x16 pixel OBJ, with tile number set to 04h; The upper row of the OBJ will consist of tile 04h and 05h, the next row of 24h and 25h. (In 256 color mode: 04h and 06h, 24h and 26h.)
+
+#### One Dimensional Character Mapping (DISPCNT Bit 6 set)
+
+In this mode, tiles are mapped each after each other from 00h-3FFh.
+Using the same example as above, the upper row of the OBJ will consist of tile 04h and 05h, the next row of tile 06h and 07h. (In 256 color mode: 04h and 06h, 08h and 0Ah.)
