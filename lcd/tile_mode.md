@@ -93,17 +93,22 @@ Specifies the tile number and attributes. Note that BG tile numbers are always s
 11    | Y反転 (0=しない, 1=反転)
 12-15 | パレット番号 (0-15) (256色/1パレットのときは使用しない)
 
-A Text BG Map always consists of 32x32 entries (256x256 pixels), 400h entries = 800h bytes. 
+BGマップは、32タイル×32タイル(256px×256px)が1単位で、大きさは 32×32×2 = 2KBとなります。これはマップブロックの大きさと一致します。
 
-However, depending on the BG Size, one, two, or four of these Maps may be used together, allowing to create backgrounds of 256x256, 512x256, 256x512, or 512x512 pixels, if so, the first map (SC0) is located at base+0, the next map (SC1) at base+800h, and so on.
+もちろんBGのサイズによっては複数のBGマップが必要になることもあります。 例えば512px×512pxのBGが必要な場合はBGマップが4つ必要になります。 この場合BGマップが配置されるマップブロックは連続している必要があります。
 
-## Rotation/Scaling BG Screen (1 byte per entry)
+## 伸縮回転モードでのBGマップ
 
-In this mode, only 256 tiles can be used. There are no x/y-flip attributes, the color depth is always 256 colors/1 palette.
+各エントリ(1タイルの配置を担当)あたり1バイトです。
 
-  Bit   Expl.
-  0-7   Tile Number     (0-255)
+伸縮回転モードでは256タイルのみが利用可能で、XY方向の反転属性はなく色深度も256色/1パレットのみ利用可能です。
 
-The dimensions of Rotation/Scaling BG Maps depend on the BG size. For size 0-3 that are: 16x16 tiles (128x128 pixels), 32x32 tiles (256x256 pixels), 64x64 tiles (512x512 pixels), or 128x128 tiles (1024x1024 pixels).
+ bit  |  内容 
+---- | ---- 
+0-7 | タイル番号 (0-255)
 
-The size and VRAM base address of the separate BG maps for BG0-3 are set up by BG0CNT-BG3CNT registers.
+BGマップの大きさとVRAMのどこに配置されるかは、BG0-3それぞれ別々の値を取ることが可能です。
+
+BGマップのサイズの設定は[BG制御レジスタ](./bg_control.md)のbit14-15でおこないます。
+
+VRAMの配置場所の設定は[BG制御レジスタ](./bg_control.md)のbit8-12でおこないます。
