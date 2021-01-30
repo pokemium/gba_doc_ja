@@ -2,11 +2,14 @@
 
 BGモード3-5では背景の描画はタイル形式ではなく、ビットマップ形式でおこないます。
 
-Bitmaps are implemented as BG2, with Rotation/Scaling support. 
+この形式はメモリ領域に値を書き込むと、それがそのまま画面に反映されます。
 
-As bitmap modes are occupying 80KBytes of BG memory, only 16KBytes of VRAM can be used for OBJ tiles.
+ビットマップ形式ではVRAMのうち80KBを背景描画に使うので、OBJタイルデータの格納に使えるのは残りの16KBだけになります。
 
 ## BGモード3 - 240×160px, 32768色
+
+- `0x0600_0000-0x0601_3fff`:  80KBのフレームバッファ0 (使えるのは75KB)
+- `0x0601_4000-0x0601_7fff`:  16KBでOBJタイルデータを格納
 
 各ピクセルを表すのに2バイト使用し、パレットデータを介さず直接32768色の中から色を指定します。透明色はありません。
 
@@ -23,16 +26,25 @@ As bitmap modes are occupying 80KBytes of BG memory, only 16KBytes of VRAM can b
 
 ## BGモード4 - 240×160px, (32768色のうちの)256色
 
-One byte is associated to each pixel, selecting one of the 256 palette entries. Color 0 (backdrop) is transparent, and OBJs may be displayed behind the bitmap.
+- `0x0600_0000-0x0600_9fff`: 37.5KBのフレームバッファ0
+- `0x0600_a000-0x0601_3fff`: 37.5KBのフレームバッファ1
+- `0x0601_4000-0x0601_7fff`: 16KBでOBJタイルデータを格納
 
-The first 240 bytes define the topmost line, the next 240 the next line, and so on. 
+1バイトが1ピクセルと対応していて、256個のパレットのうちの1つを選択します。カラー0（背景）は透明色として扱われ、OBJをビットマップの後ろに表示することも可能です。
 
-The background occupies 37.5 KBytes, allowing two frames to be used (06000000-060095FF for Frame 0, and 0600A000-060135FF for Frame 1).
+最初の240バイトが1行目、次の240バイトが2行目となっており以後も同様です。
+
+このモードでは画面全体をカバーするのに必要なフレームバッファが37.5KBだけで済み、VRAM全体で2つのフレームバッファを使用することができます。
 
 ## BGモード5 - 160×128px, 32768色
 
-Colors are defined as for Mode 3 (see above), but horizontal and vertical size are cut down to 160x128 pixels only - smaller than the physical dimensions of the LCD screen.
+- `0x0600_0000-0x0600_9fff`: 40KBのフレームバッファ0
+- `0x0600_a000-0x0601_3fff`: 40KBのフレームバッファ1
+- `0x0601_4000-0x0601_7fff`: 16KBでOBJタイルデータを格納
 
-The background occupies exactly 40 KBytes, so that BG VRAM may be split into two frames (06000000-06009FFF for Frame 0, and 0600A000-06013FFF for Frame 1).
+基本的にBGモード3と同じですが、フレームバッファと対応する画面のサイズがBGモード3では`240px×160px`でしたがBGモード5では`160px×128px`と小さくなっています。
 
-In BG modes 4,5, one Frame may be displayed (selected by DISPCNT Bit 4), the other Frame is invisible and may be redrawn in background.
+このとき画面全体をカバーするのに必要なフレームバッファは40KBとなり、VRAMは2つのフレームバッファを持つことができます。
+
+BGモード4,5では[LCD制御レジスタ](./lcd_control.md)のbit4でフレーム0とフレーム1のうち、どちらを画面に反映させるか選択します。表示されなかった片方のフレームは再描画される可能性があります。
+

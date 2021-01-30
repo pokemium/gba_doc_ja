@@ -45,7 +45,6 @@ GameBoy Advanceについて、技術的な詳細を日本語でまとめたも�
 ### 画面描画
 
 - [LCD制御レジスタ](./lcd/lcd_control.md)
-- [BGモード](./lcd/bg_mode.md)
 - [BG制御レジスタ](./lcd/bg_control.md)
 - [BGスクロール](./lcd/bg_scrolling.md)
 - [BG伸縮回転](./lcd/bg_rotation_scaling.md)
