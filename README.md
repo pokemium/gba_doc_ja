@@ -54,6 +54,7 @@ GameBoy Advanceについて、技術的な詳細を日本語でまとめたも�
 - [割り込み](./lcd/interrupt_and_status.md)
 - [タイルモード](./lcd/tile_mode.md)
 - [ビットマップモード](./lcd/bitmap_mode.md)
+- [スプライト](./lcd/sprite.md)
 
 ## References
 
