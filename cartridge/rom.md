@@ -8,7 +8,7 @@ FZeroとスーパーマリオアドバンスは4MBです。
 
 ## ROM Waitstates
 
-GBAは起動時にカートリッジのWaitStateをN=4, S=2に設定しプリフェッチは無効にします。これらの設定は[WAITCNT](../system.md#0x0400_0204---waitcnt---waitstate制御レジスタ-rw)を介して変更可能です。
+GBAは起動時にカートリッジのWaitStateを`N=4, S=2`に設定しプリフェッチは無効にします。これらの設定は[WAITCNT](../system.md#0x0400_0204---waitcnt---waitstate制御レジスタ-rw)を介して変更可能です。
 
 例えば、FZeroとスーパーマリオアドバンスはWaitStateをN=3,S=1にしプリフェッチを有効にしています。
 
@@ -16,8 +16,8 @@ GBAは起動時にカートリッジのWaitStateをN=4, S=2に設定しプリフ
 
 ## ROMチップ
 
-Because of how 24bit addresses are squeezed through the Gampak bus, the cartridge must include a circuit that latches the lower 16 address bits on non-sequential access, and that increments these bits on sequential access. 
+24ビットのアドレスがカートリッジのバスを通過するため、カートリッジには、ファーストアクセス時に下位16ビットのアドレスをラッチし、セカンドアクセス時にこれらのビットをインクリメントする回路が必要となります。
 
-Nintendo includes this circuit directly in the ROM chip.
+任天堂はこの回路をROMチップに直接組み込んでいるようです。
 
-Also, the ROM must have 16bit data bus (or a circuit which converts two 8bit data units into one 16bit unit - by not exceeding the waitstate timings).
+また、カートリッジは16ビット幅のデータバス、または2つの8ビットのデータをwaitstateの間に1つの16ビットデータに変換する回路のどちらかを持っていなければなりません。

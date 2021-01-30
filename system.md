@@ -92,6 +92,6 @@ BIOSはこのアドレスに0xFFを書き込みますが目的は不明です。
 24-27 | Wait Control WRAM 256K (0-14 = 15..1 Waitstates, 15=Lockup)
 28-31 | Unknown          (Read/Write-able)
 
-The default value 0Dh in Bits 24-27 selects 2 waitstates for 256K WRAM (ie. 3/3/6 cycles 8/16/32bit accesses). 
+bit24-27にはデフォルトで0x0dが入っていてWaitstateが2になるようになっています。 つまり 8/16/32bitアクセスに要するサイクルは 3/3/6となります。
 
-The fastest possible setting would be 0Eh (1 waitstate, 2/2/4 cycles for 8/16/32bit), that works on GBA and GBA SP only, the GBA Micro locks up with that setting (it's on-chip RAM is too slow, and works only with 2 or more waitstates).
+bit24-27を0x0eにせっていすればWaitStateは1なので、8/16/32bitアクセスに要するサイクルは 2/2/4 となり最も高速にアクセスできます。 この設定はGBAとGBASPでは可能ですがGBA Microではこの値は固定なので変更不可能です。
