@@ -36,6 +36,10 @@ BGモード0-2はタイルモード用です。BGモード3-5はビットマッ�
 
 2つのフレームが存在する場合は、どちらか1つを表示することができ、他の1つは背景に再描画することができます。
 
+強制白塗り(bit7)を有効にすると画面が真っ白になり、この間は、HBlank、VBlank以外でもVRAM、パレット、OAMにアクセスすることが可能になります。
+
+H-Blank Interval Free(bit5)を有効にするとHBlank中にOAMにアクセス可能になりますが、[1行あたりに描画可能なスプライトの数](sprite.md#1行に同時に表示可能なスプライトの数)が減ることになります。
+
 ### 例
 
  STATE | HEX | Binary | 内容 
@@ -44,25 +48,15 @@ Default | 0x0080 | 0b0000_0000_1000_0000 | bit7=1:強制白塗り
 Mode3 | 0x0403 | 0b0000_0100_0000_0011 | bit10:BG2の背景を使用, bit0-2:モード3
 Mode0 | 0x0100 | 0b0000_0001_0000_0000 | bit8:BG0の背景を使用, bit0-2:モード0
 
-## Blanking Bits
-
-Setting Forced Blank (Bit 7) causes the video controller to display white lines, and all VRAM, Palette RAM, and OAM may be accessed.
-
-"When the internal HV synchronous counter cancels a forced blank during a display period, the display begins from the beginning, following the display of two vertical lines." 
-
-What?
-
-Setting H-Blank Interval Free (Bit 5) allows to access OAM during H-Blank time - using this feature reduces the number of sprites that can be displayed per line.
-
-## 有効フラグ
+### (BG/OBJ)有効フラグ
 
 デフォルトではBG0-3有効フラグとOBJ有効フラグ(Bit8-12)がBGとOBJの有効無効化に使われます。
 
 Bit13-14を通してWindow0/1を有効にすると、特殊効果が適用され、BG0-3とOBJはウィンドウによって制御されます。
 
-## フレーム選択
+### フレーム選択
 
-BGモード4-5（ビットマップモード）では、2つのビットマップ/フレームのうちどちらか一方が表示され(Bit4で選択)、バックグラウンドでもう一方の（見えない）フレームを更新することができます。
+BGモード4-5（ビットマップモード）では、2つのフレームのうちどちらか一方が表示され(Bit4で選択)、バックグラウンドでもう一方の（見えない）フレームを更新することができます。
 
 BGモード3では、1つのフレームのみが存在します。
 

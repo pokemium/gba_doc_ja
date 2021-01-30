@@ -203,10 +203,20 @@ OBJタイルは8×8pxを1単位としており、より大きなOBJは複数の8
 
 #### 2次元マッピングモード
 
-This mapping mode assumes that the 1024 OBJ tiles are arranged as a matrix of 32x32 tiles / 256x256 pixels (In 256 color mode: 16x32 tiles / 128x256 pixels). Ie. the upper row of this matrix contains tiles 00h-1Fh, the next row tiles 20h-3Fh, and so on.
-For example, when displaying a 16x16 pixel OBJ, with tile number set to 04h; The upper row of the OBJ will consist of tile 04h and 05h, the next row of 24h and 25h. (In 256 color mode: 04h and 06h, 24h and 26h.)
+このマッピングモードでは、1024個のOBJタイルが32x32の行列（256色モードでは16x32の行列）として配置されていることを前提としています。
+
+つまり、この行列の上段には0x00-0x1f、次の列には0x20-0x3fのタイルが含まれています。
+
+```
+00, 01, 02, 03, 04, 05, 06, 07, 08, 09, 0a, 0b, 0c, 0d, 0e, 0f, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 1a, 1b, 1c, 1d, 1e, 1f
+20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 2a, 2b, 2c, 2d, 2e, 2f, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 3a, 3b, 3c, 3d, 3e, 3f
+...
+```
+
+例えば、16x16ピクセルのOBJを表示する場合、タイル番号が0x04に設定されている場合、OBJの上段のタイルは0x04と0x05、次の行は0x24と0x25となります。(256色モードの場合は 0x04と0x06、0x24と0x26)
 
 #### 1次元マッピングモード
 
-In this mode, tiles are mapped each after each other from 00h-3FFh.
-Using the same example as above, the upper row of the OBJ will consist of tile 04h and 05h, the next row of tile 06h and 07h. (In 256 color mode: 04h and 06h, 08h and 0Ah.)
+このモードでは1024個のOBJタイルが長さ0x3ffの配列として配置されていることを前提としています。
+
+1次元という名前のとおり、16x16ピクセルのOBJを表示する場合、タイル番号が0x04に設定されている場合、OBJの上段のタイルは0x04と0x05、次の行は0x06と0x07となります。(256色モードの場合は 0x04と0x06、0x08と0x0a)
