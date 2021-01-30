@@ -155,7 +155,7 @@ OBJ同士の優先度と混同しないように注意してください。
 
 上で述べたようにOAMの各エントリの間には空白の領域がありました。 これらの 128×16bit はOBJの伸縮回転パラメータを格納するのに使われます。
 
-#### Location of Rotation/Scaling Parameters in OAM
+#### PA,PB,PC,PD (R/W)
 
 4つの16bitパラメータ(PA,PB,PC,PD)で各OBJの伸縮回転に関するプロパティを定義しています。
 
@@ -165,42 +165,48 @@ OBJ同士の優先度と混同しないように注意してください。
 
 のように配置されています。
 
-伸縮回転パラメータ用のメモリ領域は全部で 128×16bitであり、1つのOBJにつき4×16bitなので全部で32OBJの伸縮回転パラメータを持つことができます。
+伸縮回転パラメータ用のメモリ領域は全部で 128×16bitであり、1つのOBJにつき4×16bitなので全部で 32 OBJ の伸縮回転パラメータを持つことができます。
+
+伸縮回転を使用する各OBJは、上記の32のパラメータグループの中から任意のものを選択することができます。
 
 これはAttr1のbit9-13でOBJと紐づけられます。
 
-#### OBJ Rotation/Scaling PA,PB,PC,PD Parameters (R/W)
+個別のPA,PB,PC,PD値の意味は[BGの場合](bg_rotation_scaling.md#伸縮回転パラメータ)と同じです。
 
-Each OBJ that uses Rotation/Scaling may select between any of the above 32 parameter groups. 
+#### 基準点
 
-For details, refer to the previous chapter about OBJ Attributes.
+OBJの伸縮回転時の基準点はOBJの座標に等しくなります。
 
-The meaning of the separate PA,PB,PC,PD values is identical as for BG, for details read the chapter about BG Rotation/Scaling.
+またOBJを回転させる際はOBJの真ん中を軸として回転させることになります。例えば 8×32の場合、(4, 16)が軸になって回転します。
 
-#### OBJ Reference Point & Rotation Center
+#### サイズ2倍フラグ (Attr0のbit9)
 
-The OBJ Reference Point is the upper left of the OBJ, ie. OBJ X/Y coordinates: X+0, Y+0.
+これは伸縮回転が有効なOBJに対するフラグです。
 
-The OBJ Rotation Center is always (or should be usually?) in the middle of the object, ie. for a 8x32 pixel OBJ, this would be at the OBJ X/Y coordinates: X+4, and Y+16.
+**フラグが0**
 
-#### OBJ Double-Size Bit (for OBJs that use Rotation/Scaling)
+スプライトを回転させて、(回転していない場合の)通常サイズの長方形の領域の内側に表示します。回転されたスプライトの端がその領域の外に出てしまうと、その端は見えなくなってしまいます。
 
-When Double-Size is zero: The sprite is rotated, and then display inside of the normal-sized (not rotated) rectangular area - the edges of the rotated sprite will become invisible if they reach outside of that area.
+**フラグが1**
 
-When Double-Size is set: The sprite is rotated, and then display inside of the double-sized (not rotated) rectangular area - this ensures that the edges of the rotated sprite remain visible even if they would reach outside of the normal-sized area. (Except that, for example, rotating a 8x32 pixel sprite by 90 degrees would still cut off parts of the sprite as the double-size area isn't large enough.)
+スプライトを回転させた後，(回転していない場合の)2倍のサイズのの矩形領域の内側に表示します．これにより，回転したスプライトの端が通常のサイズの範囲外に出てしまっても，スプライトの端が見えるようになります。
 
-### VRAM Character (Tile) Mapping
+ただし、例えば8x32ピクセルのスプライトを90度回転させた場合、サイズ2倍の領域は16×64と32に満たないので、スプライトの一部が切り取られてしまいます。
 
-Each OBJ tile consists of 8x8 dots, however, bigger OBJs can be displayed by combining several 8x8 tiles. The horizontal and vertical size for each OBJ may be separately defined in OAM, possible H/V sizes are 8,16,32,64 dots - allowing 'square' OBJs to be used (such like 8x8, 16x16, etc) as well as 'rectangular' OBJs (such like 8x32, 64x16, etc.)
+### OBJのマッピングモード
 
-When displaying an OBJ that contains of more than one 8x8 tile, one of the following two mapping modes can be used. In either case, the tile number of the upperleft tile must be specified in OAM memory.
+OBJタイルは8×8pxを1単位としており、より大きなOBJは複数の8×8タイルを組み合わせることによって表示することができます。
 
-#### Two Dimensional Character Mapping (DISPCNT Bit 6 cleared)
+各OBJのX方向とY方向のサイズは、個別にOAMで定義することができ、8,16,32,64ピクセルから選択可能です。よって組み合わせによって正方形だったり長方形のOBJを設定可能です。
+
+複数の8×8タイルを含むOBJを表示する場合、[LCD制御レジスタ](./lcd_control.md)のbit6で指定することで、以下の2つのマッピングモードのいずれかを使用することができます。いずれの場合も、左上のタイルのタイル番号をOAMメモリに指定しなければなりません。
+
+#### 2次元マッピングモード
 
 This mapping mode assumes that the 1024 OBJ tiles are arranged as a matrix of 32x32 tiles / 256x256 pixels (In 256 color mode: 16x32 tiles / 128x256 pixels). Ie. the upper row of this matrix contains tiles 00h-1Fh, the next row tiles 20h-3Fh, and so on.
 For example, when displaying a 16x16 pixel OBJ, with tile number set to 04h; The upper row of the OBJ will consist of tile 04h and 05h, the next row of 24h and 25h. (In 256 color mode: 04h and 06h, 24h and 26h.)
 
-#### One Dimensional Character Mapping (DISPCNT Bit 6 set)
+#### 1次元マッピングモード
 
 In this mode, tiles are mapped each after each other from 00h-3FFh.
 Using the same example as above, the upper row of the OBJ will consist of tile 04h and 05h, the next row of tile 06h and 07h. (In 256 color mode: 04h and 06h, 08h and 0Ah.)

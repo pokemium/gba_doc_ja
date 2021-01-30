@@ -8,7 +8,7 @@
 3   | CGBモード    (0=GBA, 1=CGB BIOSオペコードで設定されます)
 4   | フレーム選択   (0-1=Frame0-1) (BGモードが4,5のときのみ)
 5   | HBlank中にOAMにアクセス可能か (1=可能)
-6   | OBJ Character VRAM Mapping (0=2次元, 1=1次元)
+6   | OBJのマッピングモード (0=2次元, 1=1次元)
 7   | 強制白塗り     (1=有効 その間はVRAM,Palette,OAMに高速アクセス可能)
 8   | BG0有効フラグ  (0=Off, 1=On)
 9   | BG1有効フラグ  (0=Off, 1=On)
