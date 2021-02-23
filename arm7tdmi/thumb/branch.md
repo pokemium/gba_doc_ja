@@ -97,6 +97,8 @@ PC = LR + (nn SHL 1), and LR = PC+2 OR 1 (and BLX: T=0)
 
 実行時間: 3S+1N (1つ目: 1S, 2つ目: 2S+1N)
 
-Note: Exceptions may or may not occur between first and second opcode, this is "implementation defined" (unknown how this is implemented in GBA and NDS).
+### 注意
 
-Using only the 2nd half of BL as "BL LR+imm" is possible (for example, Mario Golf Advance Tour for GBA uses opcode F800h as "BL LR+0").
+1つ目のオペコードと2つ目のオペコードの間に例外が起きるかどうかは未定義です。
+
+`BL LR+imm`として2つ目のオペコードだけを使うことも可能です。

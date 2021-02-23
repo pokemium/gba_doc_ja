@@ -57,6 +57,12 @@ GameBoy Advanceについて、技術的な詳細を日本語でまとめたも�
 - [ビットマップモード](./lcd/bitmap_mode.md)
 - [スプライト](./lcd/sprite.md)
 
+### BIOS
+
+- [命令一覧](./bios/bios.md)
+- [算術](./bios/arithmetic.md)
+- [メモリコピー](./bios/arithmetic.md)
+
 ## References
 
 - [GBATEK](https://web.archive.org/web/20210108175702/https://problemkaputt.de/gbatek.htm)
