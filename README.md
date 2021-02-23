@@ -61,7 +61,7 @@ GameBoy Advanceについて、技術的な詳細を日本語でまとめたも�
 
 - [命令一覧](./bios/bios.md)
 - [算術](./bios/arithmetic.md)
-- [メモリコピー](./bios/arithmetic.md)
+- [メモリコピー](./bios/memcpy.md)
 
 ## References
 
