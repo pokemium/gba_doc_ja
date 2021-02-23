@@ -38,6 +38,7 @@ GameBoy Advanceについて、技術的な詳細を日本語でまとめたも�
   - [ロード/ストア](./arm7tdmi/thumb/loadstore.md)
   - [ロード/ストア その2](./arm7tdmi/thumb/loadstore2.md)
   - [アドレッシング](./arm7tdmi/thumb/addressing.md)
+  - [分岐命令](arm7tdmi/thumb/branch.md)
 - [サイクル](arm7tdmi/cycle.md)
 - [条件](arm7tdmi/cond.md)
 - [例外](arm7tdmi/exception.md)
