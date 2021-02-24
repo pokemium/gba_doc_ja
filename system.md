@@ -51,9 +51,9 @@ GBAはカートリッジROMの各128Kブロックの先頭にアクセスする�
 0 | Undocumented. First Boot Flag  (0=First, 1=Further)
 1-7 | Undocumented. Not used.
 
-Normally the debug handler rejects control unless it detects Debug flags in cartridge header, in that case it may redirect to a cut-down boot procedure (bypassing Nintendo logo and boot delays, much like nocash burst boot for multiboot software). 
+通常、デバッグハンドラは、カートリッジヘッダでデバッグフラグを検出しない限り制御を受け付けませんが、その場合は、(任天堂ロゴとブート遅延を省略することで) 簡略化されたブート処理へとリダイレクトします 
 
-I am not sure if it is possible to reset the GBA externally without automatically resetting register 300h though.
+しかし、このレジスタを自動的にリセットせずにGBAを外部からリセットすることは可能なのかどうかはわかりません。
 
 ## 0x0400_0301 - HALTCNT - BYTE - Undocumented - 省電力モード制御レジスタ (W)
 

@@ -17,8 +17,7 @@ Mode0 では、タイルやマップ（タイルを並べて作った背景画�
 6     | モザイク (0=無効, 1=有効)
 7     | カラーモード (0=16/16, 1=256/1)
 8-12  | マップデータ(2KB単位)を置くブロック (0-31)
-13    | BG0/BG1: Not used (except in NDS mode: Ext Palette Slot for BG0/BG1)
-13    | BG2/BG3: Display Area Overflow (0=Transparent, 1=Wraparound)
+13    | BG0/BG1: 未使用, BG2/BG3: 画面オーバーフロー時の挙動 (0=Transparent, 1=Wraparound)
 14-15 | 仮想画面サイズ (0-3)
 
 優先度が同じBGが複数ある場合はBG0 -> BG3の順に優先されます(つまりBG0が最優先)。

@@ -21,6 +21,6 @@ CPUが既にバッファにプリフェッチされているデータを要求�
 
 ## プリフェッチ無効バグ
 
-When Prefetch is disabled, the Prefetch Disable Bug will occur for all "Opcodes in GamePak ROM with Internal Cycles which do not change R15" for those opcodes, the bug changes the opcode fetch time from 1S to 1N.
+プリフェッチを無効にすると、R15を変更しない内部サイクルを持つカートリッジ内のオペコードに対してプリフェッチ無効バグが発生し、オペコードのフェッチ時間が1Sから1Nに変更されます。
 
-Note: Affected opcodes (with I cycles) are: Shift/rotate register-by-register opcodes, multiply opcodes, and load opcodes (ldr,ldm,pop,swp).
+影響を受けるオペコード: Shift/rotate register-by-register opcodes, multiply opcodes, and load opcodes (ldr,ldm,pop,swp).

@@ -85,12 +85,12 @@ IMEをクリアしたりIEのフラグをクリアしているサイクルでは
 - Determine reason(s) of interrupt by examining IF register
 - User program may freely assign priority to each reason by own logic
 - Process the most important reason of your choice
-- User MUST manually acknowledge by writing to IF register
+- プログラマはIFレジスタに書き込むことで手動で割り込みを知らせなければいけません
 - もしネストした割り込みを許可したいなら、SPSR_irqをスタックに保存してIRQを有効化してください
 - If using other registers than BIOS-pushed R0-R3, manually save R4-R11 also.
-- Note that Interrupt Stack is used (which may have limited size)
-- So, for memory consuming stack operations use system mode (=user stack).
-- When calling subroutines in system mode, save LSR_usr also.
+- 割り込みスタックは使用されていることに注意してください。(またそのサイズが有限であることも注意が必要です)
+- なのでスタックを大量に使うような処理はシステムモードのユーザースタックを使ってください。
+- システムモード中に関数をコールする時は`LSR_usr`も退避する必要があります。
 - Restore SPSR_irq and/or R4-R11 if you've saved them above.
 - Finally, return to BIOS handler by BX LR (R14_irq) instruction.
 
