@@ -10,6 +10,7 @@ GameBoy Advanceについて、技術的な詳細を日本語でまとめたも�
 
 - [仕様](spec.md)
 - [メモリマップ](memory.md)
+- [IOレジスタ](io.md)
 - [DMA転送](dma.md)
 - [割り込み](interrupt.md)
 - [システム制御](system.md)
