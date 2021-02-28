@@ -41,9 +41,9 @@ MUL,
 ---- | ---- | ---- | ----
 0b0000 | MUL{cond}{S}   Rd,Rm,Rs | Rd=Rm*Rs | 符号関係なし
 0b0001 | MLA{cond}{S}   Rd,Rm,Rs,Rn | Rd=Rm*Rs+Rn | 符号関係なし
-0b0010 | UMAAL{cond}    RdLo,RdHi,Rm Rs | RdHiLo=Rm*Rs+RdHi+RdLo | unsigned
+0b0010 | UMAAL{cond}    RdLo,RdHi,Rm Rs | RdHiLo=Rm*Rs+RdHi+RdLo | 未サポート
 0b0100 | UMULL{cond}{S} RdLo,RdHi,Rm,Rs | RdHiLo=Rm*Rs | unsigned
-0b0101 | UMLAL{cond}{S} RdLo,RdHi,Rm,Rs | RdHiLo=Rm*Rs+RdHiLo | 
+0b0101 | UMLAL{cond}{S} RdLo,RdHi,Rm,Rs | RdHiLo=Rm*Rs+RdHiLo | unsigned
 0b0110 | SMULL{cond}{S} RdLo,RdHi,Rm,Rs | RdHiLo=Rm*Rs |
 0b0111 | SMLAL{cond}{S} RdLo,RdHi,Rm,Rs | RdHiLo=Rm*Rs+RdHiLo | 
 0b1000 | SMLAxy{cond}   Rd,Rm,Rs,Rn | Rd=HalfRm*HalfRs+Rn | 
