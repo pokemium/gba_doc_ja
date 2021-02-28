@@ -1,5 +1,7 @@
 # 乗算
 
+MUL,
+
 ## 命令のフォーマット
 
 ### ワード単位
@@ -37,10 +39,10 @@
 
  値  |  フォーマット | 処理内容 | 備考
 ---- | ---- | ---- | ----
-0b0000 | MUL{cond}{S}   Rd,Rm,Rs | Rd=Rm*Rs | works as both
-0b0001 | MLA{cond}{S}   Rd,Rm,Rs,Rn | Rd=Rm*Rs+Rn | signed+unsigned
-0b0010 | UMAAL{cond}    RdLo,RdHi,Rm Rs | RdHiLo=Rm*Rs+RdHi+RdLo | un-
-0b0100 | UMULL{cond}{S} RdLo,RdHi,Rm,Rs | RdHiLo=Rm*Rs | signed
+0b0000 | MUL{cond}{S}   Rd,Rm,Rs | Rd=Rm*Rs | 符号関係なし
+0b0001 | MLA{cond}{S}   Rd,Rm,Rs,Rn | Rd=Rm*Rs+Rn | 符号関係なし
+0b0010 | UMAAL{cond}    RdLo,RdHi,Rm Rs | RdHiLo=Rm*Rs+RdHi+RdLo | unsigned
+0b0100 | UMULL{cond}{S} RdLo,RdHi,Rm,Rs | RdHiLo=Rm*Rs | unsigned
 0b0101 | UMLAL{cond}{S} RdLo,RdHi,Rm,Rs | RdHiLo=Rm*Rs+RdHiLo | 
 0b0110 | SMULL{cond}{S} RdLo,RdHi,Rm,Rs | RdHiLo=Rm*Rs |
 0b0111 | SMLAL{cond}{S} RdLo,RdHi,Rm,Rs | RdHiLo=Rm*Rs+RdHiLo | 
@@ -74,21 +76,19 @@ Rsレジスタの
 
 フラグ(S=1): NZ
 
-### MULL, MLAL
+### UMULL, UMLAL, SMULL, SMLAL
 
 - MULL = `Multiply Long`
 - MLAL = `Multiply-Accumulate Long`
 
-CPUのバージョンによってはサポートされていないときもあります。 ARMv3Mではサポートされていますが、ARMv4xM/ARMv5xMではサポートされていません。
+頭が`U`のときは符号なし、`S`のときは符号ありです。
 
-RdHi, RdLo, Rmはすべて異なるレジスタである必要があり、R15を指すことはできません。
+RdHi, RdLo, Rmはすべて異なるレジスタである必要があり、R15を指すことはできないことに注意してください。
 
 実行時間: 
 
 - MULL: 1S+(m+1)I
 - MLAL: 1S+(m+2)I
-
-符号付きの演算のときは`SMULL,SMLAL`、符号なしのときは`UMULL,UMLAL`と表されます。
 
 'm' は、Rsが指すレジスタの値によって決まります。
 
@@ -102,6 +102,8 @@ Rsレジスタの
 フラグ(S=1): NZ
 
 ### SMLAxy, SMLAWy, SMLALxy, SMULxy, SMULWy
+
+**GBAではサポートされていません**(ARMv5TE以降からサポート)
 
 これらは全て、符号付きのハーフワード単位の乗算命令 です。
 
@@ -120,4 +122,4 @@ NZCVフラグはハーフワード乗算のとき不変です。
 
 ### UMAAL
 
-GBAにはありません。
+**GBAではサポートされていません**(ARMv6以降からサポート)
