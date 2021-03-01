@@ -72,3 +72,5 @@ PSRは `Program Status Registers`の略です。
 CPSRは現在のフラグやCPUの制御ビットが格納されています。
 
 例外が起こると、古いCPSRが例外のモードに応じたSPSRに退避されます。(PCがLRに退避されるのに似ています。)
+
+各Bitの内容やSPSRについての詳細は[こちら](cond.md#cpsr)を参照してください。
