@@ -103,7 +103,6 @@
 
 ### S=1, with unused Rd bits=1111b, オペコードが CMPP/CMNP/TSTP/TEQP のとき:
 
-- R15=result  ;modify PSR bits in R15, ARMv2 and below only.
 - In user mode only N,Z,C,V bits of R15 can be changed.
 - In other modes additionally I,F,M1,M0 can be changed.
 - The PC bits in R15 are left unchanged in all modes.
