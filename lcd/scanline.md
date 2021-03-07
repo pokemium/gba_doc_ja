@@ -4,7 +4,7 @@ GBAの画面描画は上から順に1行ずつやっていきます。
 
 HBlank、VBlankも含めた画面の概略図は次のようになっています。
 
-![screen_size](../img/screen_size.png)
+<img src="../img/screen_size.png" alt="screensize" width="480" />
 
 ## 列の描画
 
@@ -32,7 +32,7 @@ VRAMとPaletteにはHBlank中のみアクセス可能です。OAMはHBlank中に
 
 VBlank中はVRAM,OAM,Palette全てにアクセス可能です。
 
-VBlank中(160~228行)は、240~308pxのHBlank期間に入ってもHBlank割り込みは発生しません。
+VBlank中(160\~228行)は、240\~308pxのHBlank期間に入ってもHBlank割り込みは発生しません。
 
 (*) 縦画面のサイズは160px(160行)ですが、上の8pxは実際には見えません。これらの行は、光源に向けてGBAを持っているときに影に覆われています。これらの行は事実上黒です。そして、重要な情報を表示するために使用するべきではありません。
 
