@@ -57,6 +57,7 @@ GameBoy Advanceについて、技術的な詳細を日本語でまとめたも�
 - [タイルモード](./lcd/tile_mode.md)
 - [ビットマップモード](./lcd/bitmap_mode.md)
 - [スプライト](./lcd/sprite.md)
+- [描画サイクル](./lcd/scanline.md)
 
 ### BIOS
 
