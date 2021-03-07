@@ -111,7 +111,7 @@
 
 ユーザーモード以外からユーザーモードに復帰する用途などで用いる
 
-- CPSR = SPSR_${current_mode}
+- CPSR = `SPSR_${current_mode}`
 - PC = 処理結果
 
 例:
