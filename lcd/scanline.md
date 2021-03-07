@@ -1,41 +1,41 @@
 # 描画サイクル
 
-## Horizontal Dimensions
+GBAの画面描画は上から順に1行ずつやっていきます。
 
-The drawing time for each dot is 4 CPU cycles.
+HBlank、VBlankも含めた画面の概略図は次のようになっています。
 
-```
-  Visible     240 dots,  57.221 us,    960 cycles - 78% of h-time
-  H-Blanking   68 dots,  16.212 us,    272 cycles - 22% of h-time
-  Total       308 dots,  73.433 us,   1232 cycles - ca. 13.620 kHz
-```
+![screen_size](../img/screen_size.png)
 
-VRAM and Palette RAM may be accessed during H-Blanking. OAM can accessed only if "H-Blank Interval Free" bit in DISPCNT register is set.
+## 列の描画
 
-## Vertical Dimensions
+現在描画中の行を左から右に1列(1ピクセル)ずつ描画していきます。
+
+1ピクセル(=dot)描画するのにCPU時間で4サイクルかかります。
 
 ```
-  Visible (*) 160 lines, 11.749 ms, 197120 cycles - 70% of v-time
-  V-Blanking   68 lines,  4.994 ms,  83776 cycles - 30% of v-time
-  Total       228 lines, 16.743 ms, 280896 cycles - ca. 59.737 Hz
+  Visible     240px, 57.221 us, 960サイクル
+  HBlank      68px, 16.212 us, 272サイクル
+  Total       308px, 73.433 us, 1232サイクル
 ```
 
-All VRAM, OAM, and Palette RAM may be accessed during V-Blanking.
+VRAMとPaletteにはHBlank中のみアクセス可能です。OAMはHBlank中に加えて、DISPCNTのbit5がセットされているときのみアクセス可能です。
 
-Note that no H-Blank interrupts are generated within V-Blank period.
+## 行の描画
 
-(*) Even though vertical screen size is 160 lines, the upper 8 lines are not **really** visible, these lines are covered by a shadow when holding the GBA orientated towards a light source, the lines are effectively black - and should not be used to display important information.
+1行を描画し終えたら次の行の描画に写ります。行の描画は上から下へと行われます。
+
+```
+  Visible (*) 160行, 11.749 ms, 197120サイクル
+  VBlank      68行,  4.994 ms,  83776サイクル
+  Total       228行, 16.743 ms, 280896サイクル
+```
+
+VBlank中はVRAM,OAM,Palette全てにアクセス可能です。
+
+VBlank中(160~228行)は、240~308pxのHBlank期間に入ってもHBlank割り込みは発生しません。
+
+(*) 縦画面のサイズは160px(160行)ですが、上の8pxは実際には見えません。これらの行は、光源に向けてGBAを持っているときに影に覆われています。これらの行は事実上黒です。そして、重要な情報を表示するために使用するべきではありません。
 
 ## System Clock
 
-The system clock is 16.78MHz (16x1024x1024 Hz), one cycle is thus approx. 59.59ns.
-
-## Interlace
-
-The LCD display is using some sort of interlace in which even scanlines are dimmed in each second frame, and odd scanlines are dimmed in each other frame (it does always render ALL lines in ALL frames, but half of them are dimmed).
-
-The effect can be seen when displaying some horizontal lines in each second frame, and hiding them in each other frame: the hardware will randomly show the lines in dimmed or non-dimmed form (depending on whether the test was started in an even or odd frame).
-
-Unknown if it's possible to determine the even/off frame state by software (or possibly to reset the hardware to this or that state by software).
-
-Note: The NDS is applying some sort of frameskip to GBA games, about every 3 seconds there will by a missing (or maybe: inserted) frame, ie. a GBA game that is updating the display in sync with GBA interlace will get offsync on NDS consoles.
+CPUのクロックは 16.78MHz(16×1024×1024Hz) なので、1フレームあたり約1/60秒です。
