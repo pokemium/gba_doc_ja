@@ -81,6 +81,12 @@
  ROR#0: ROR#1 と同様に RRX#1 (RCR) と解釈されますが、Op2の31bitは古いキャリーの値になります。
 ```
 
+## Using R15 (PC)
+
+When using R15 as Destination (Rd), note below CPSR description and Execution time description.
+
+When using R15 as operand (Rm or Rn), the returned value depends on the instruction: PC+12 if I=0,R=1 (shift by register), otherwise PC+8 (shift by immediate).
+
 ## 🚩 フラグの変更
 
 ###  S=1, Rd≠R15, 論理命令 のとき:
