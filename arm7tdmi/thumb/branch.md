@@ -105,3 +105,7 @@ PC = LR + (nn SHL 1), and LR = PC+2 OR 1 (and BLX: T=0)
 1つ目のオペコードと2つ目のオペコードの間に例外が起きるかどうかは未定義です。
 
 `BL LR+imm`として2つ目のオペコードだけを使うことも可能です。
+
+## BX
+
+[THUMB.5: Hi register operations/branch exchange](./register.md#thumb5-hi-register-operationsbranch-exchange)を参照

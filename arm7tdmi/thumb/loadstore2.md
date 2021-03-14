@@ -72,3 +72,7 @@ ARM9: POP {PC} copies the LSB to thumb bit (switches to ARM if bit0=0).
 
 - LDM: nS+1N+1I
 - STM: (n-1)S+2N
+
+## 順番
+
+[ARMモードの場合](../arm/loadstore3.md#順番)と同じです。
