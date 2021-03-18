@@ -151,3 +151,22 @@ LDMIB r13!, {r4-r7, r9, r15}
 LDMDA r13!, {r4-r7, r9, r15}
  -> LDMDAするたびに読み出し元のアドレスが小さくなっていくので r15 -> r9 -> ... -> r4 の順番
 ```
+
+## When S Bit is set (S=1)
+
+### LDMでRlistにR15が含まれるとき
+
+モードが変化します。
+
+R15のロード時に、自動的に`CPSR=SPSR_${current_mode}`が行われます。
+
+### それ以外のとき (User bank transfer)
+
+RlistはユーザーバンクレジスタのR0～R15を指します。（R14_svcなどの現在のモードに関連するレジスタではありません）
+
+Base write-back should not be used for User bank transfer.
+
+**注意(LDMのときのみ)**
+
+LDMの次の命令がバンクされたレジスタ（例：R14_svc）から読み出す場合、CPUは代わりにR14を読み出す可能性があり、必要に応じてダミーのNOPを挿入します。
+
