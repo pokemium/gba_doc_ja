@@ -10,9 +10,9 @@ NDS9のスタックレジスタSPはハードコードされていることに�
 
 Host | sp_svc | sp_irq | sp_sys | zerofilled area | return address
 -- | -- | -- | -- | -- | --  
-GBA  | 3007FE0h | 3007FA0h | 3007F00h | [3007E00h..3007FFFh] | Flag[3007FFAh]
-NDS7 | 380FFDCh | 380FFB0h | 380FF00h | [380FE00h..380FFFFh] | Addr[27FFE34h]
-NDS9 | 0803FC0h | 0803FA0h | 0803EC0h | [DTCM+3E00h..3FFFh]  | Addr[27FFE24h]
+GBA  | 0x3007FE0 | 0x3007FA0 | 0x3007F00 | [0x3007E00..0x3007FFF] | Flag[0x3007FFA]
+NDS7 | 0x380FFDC | 0x380FFB0 | 0x380FF00 | [0x380FE00..0x380FFFF] | Addr[0x27FFE34]
+NDS9 | 0x0803FC0 | 0x0803FA0 | 0x0803EC0 | [DTCM+0x3E00..0x3FFF]  | Addr[0x27FFE24]
 
 (NDSのみ)リセット処理はSWIを実行したCPUでのみ行われることに注意してください。
 
@@ -22,19 +22,19 @@ NDS9 | 0803FC0h | 0803FA0h | 0803EC0h | [DTCM+3E00h..3FFFh]  | Addr[27FFE24h]
 
 ## RegisterRamReset: swi 0x01
 
-ResetFlagsで指定されたI/OレジスタやRAMをリセットします。ただし、`0x3007E00h-0x3007FFF`のCPU内蔵RAM領域はクリアされません。
+ResetFlagsで指定されたI/OレジスタやRAMをリセットします。ただし、`0x3007E00-0x3007FFF`のCPU内蔵RAM領域はクリアされません。
 
 引数: r0
 
 ```
 r0  ResetFlags
     Bit   Expl.
-    0     Clear 256K on-board WRAM  ;-don't use when returning to WRAM
-    1     Clear 32K on-chip WRAM    ;-excluding last 200h bytes
+    0     Clear 256K on-board WRAM  ; -don't use when returning to WRAM
+    1     Clear 32K on-chip WRAM    ; -excluding last 200h bytes
     2     Clear Palette
     3     Clear VRAM
-    4     Clear OAM              ;-zerofilled! does NOT disable OBJs!
-    5     Reset SIO registers    ;-switches to general purpose mode!
+    4     Clear OAM                 ; -zerofilled! does NOT disable OBJs!
+    5     Reset SIO registers       ; -switches to general purpose mode!
     6     Reset Sound registers
     7     Reset all other registers (except SIO, Sound)
 ```
