@@ -17,6 +17,7 @@ GameBoy Advanceについて、技術的な詳細を日本語でまとめたも�
 - [タイマー](timer.md)
 - [キー入力](keypad.md)
 - [カートリッジのプリフェッチ](prefetch.md)
+- [devkitProのインストール](devkit.md)
 
 ### カートリッジ
 
