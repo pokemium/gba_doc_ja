@@ -18,8 +18,8 @@ ARMステートのとき、`{cond}`はすべてのオペコードで使うこと
 5 | PL    | N=0         | 前の処理結果が0以上
 6 | VS    | V=1         | signed overflow (V set)
 7 | VC    | V=0         | signed no overflow (V cleared)
-8 | HI    | C=1 && Z=0 | unsigned higher
-9 | LS    | C=0 || Z=1  | unsigned lower or same
+8 | HI    | C=1 and Z=0 | unsigned higher
+9 | LS    | C=0 or Z=1  | unsigned lower or same
 A | GE    | N=V         | signed greater or equal
 B | LT    | N≠V        | signed less than
 C | GT    | Z=0 and N=V | signed greater than
