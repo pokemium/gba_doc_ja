@@ -28,13 +28,13 @@ GBAの場合、処理サイズは8ワード単位、つまりバイト数が32�
 
 2または4バイト単位でのメモリコピー・メモリ埋めをおこないます。
 
-Memcopy is implemented as repeated `LDMIA/STMIA [Rb]!,r3` or `LDRH/STRH r3,[r0,r5]` instructions. 
+メモリコピーは`LDMIA/STMIA [Rb]!,r3` または `LDRH/STRH r3,[r0,r5]` を繰り返すことで行われています。
 
-Memfill as single LDMIA or LDRH followed by repeated `STMIA [Rb]!,r3` or `STRH r3,[r0,r5]`.
+メモリ埋めは`STMIA [Rb]!,r3` か `STRH r3,[r0,r5]`　を繰り返した後に `LDMIA` か `LDRH` を行うことでメモリ埋めをおこないます。
 
-The length must be a multiple of 4 bytes (32bit mode) or 2 bytes (16bit mode). 
+処理サイズのバイト長は4バイト(32bitモード)か2バイト(16bitモード)の倍数である必要があります。
 
-The (half)wordcount in r2 must be length/4 (32bit mode) or length/2 (16bit mode), ie. length in word/halfword units rather than byte units.
+r2の処理サイズは32bitモードならワード単位、16bitモードならハーフワード単位であることに注意してください。
 
 引数:
 
