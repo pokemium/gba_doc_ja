@@ -1,5 +1,11 @@
 # DMA転送
 
+ダイレクトメモリアクセス（DMA）は、ある場所から別の場所へデータを高速にコピーする方法です。
+
+DMAはデータのコピーだけでなく、メモリ埋めにも使用できます。
+
+DMAを有効にすると、いわゆるDMAコントローラがハードウェアを引き継ぎ（実際にはCPUは停止している）、必要な転送を行い、気づかないうちにCPUに制御を戻しています。
+
 GBAには4つのDMAチャンネルがあり、優先度は DMA0が最高、DMA1、DMA2と続いて、DMA3が最低となっています。優先度の低いDMAチャンネルは、優先度の高いチャンネルが完了するまで一時停止されます。
 
 DMA転送がアクティブなときはCPUは一時停止しますが、`Sound/Blanking DMA転送`が一時停止している間はCPUは動作しています。
@@ -62,17 +68,17 @@ CNTの上位16bitです。
 0x0400_00DE - DMA3CNT_H - DMA3制御レジスタ (R/W)
 ```
 
- bit  |  内容
----- | ----
-0-4 | 未使用
-5-6 | ターゲットアドレス制御 (0=Increment,1=Decrement,2=Fixed,3=Increment/Reload)
-7-8 | ソースアドレス制御 (0=Increment,1=Decrement,2=Fixed,3=Prohibited)
-9 | DMAリピート                   (0=Off, 1=On) (Must be zero if Bit 11 set)
-10 | DMA転送タイプ (0=16bit, 1=32bit)
-11 | Game Pak DRQ  - DMA3 only -  (0=Normal, 1=DRQ from Game Pak, DMA3)
-12-13 | DMA開始タイミング (0=即座に, 1=VBlank時, 2=HBlank時, 3=※)
-14 | IRQ upon end of Word Count   (0=Disable, 1=Enable)
-15 | DMA有効フラグ (0=無効, 1=有効)
+ bit | 内容 | 備考
+---- | ---- | ---- 
+0-4 | 未使用 | --
+5-6 | ターゲットアドレス制御 (0=Increment,1=Decrement,2=Fixed,3=Increment/Reload) | --
+7-8 | ソースアドレス制御 (0=Increment,1=Decrement,2=Fixed,3=Prohibited) | --
+9 | DMAリピート (0=Off, 1=On) | bit11が1の場合必ず0
+10 | DMA転送タイプ (0=16bit, 1=32bit) | -- 
+11 | Game Pak DRQ (0=Normal, 1=DRQ from Game Pak, DMA3) | DMA3のみ
+12-13 | DMA開始タイミング (0=即座に, 1=VBlank時, 2=HBlank時, 3=※) | --
+14 | IRQ upon end of Word Count (0=Disable, 1=Enable) | -- 
+15 | DMA有効フラグ (0=無効, 1=有効) | -- 
 
 ※ DMAチャンネルごとに異なります。 DMA0=Prohibited, DMA1/DMA2=Sound FIFO, DMA3=Video Capture
 
@@ -144,7 +150,4 @@ n個のデータ単位があるとき、DMA転送に要する時間は、2N+2(n-
 
 このうち、1N+(n-1)SがReadサイクル、残りの1N+(n-1)SがWriteサイクルとなりますが、実際のサイクル数は転送元エリアと転送先エリアのWaitStateとバス幅に依存します(CPU命令サイクルタイムの章で説明します)。
 
-DMA処理にかかる内部時間は 2I(通常) か 4I(転送元と転送先がGamePakメモリのとき)です。
-
-DMA lockup when stopping while starting ???
-Capture delayed, Capture Enable=AutoCleared ???
+DMA処理にかかる内部時間(x)は 2I(通常) か 4I(転送元と転送先がGamePakメモリのとき)です。
