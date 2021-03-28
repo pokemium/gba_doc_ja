@@ -76,6 +76,26 @@ hzoom, vzoom | 横・縦の拡大率
 
 伸縮回転パラメータの4つの数値を組み合わせることで、伸縮や回転などさまざまな効果を出すことができます。
 
+### dx(PA) と dy(PC)
+
+水平方向の線を変換する場合、dxとdyはその線の勾配と倍率を指定します。
+
+例えば、長さ100のx方向の直線(y=0x)が存在するときに`dx=1,dy=1`の変換をすると考えてみましょう。
+
+このとき変換後は45度方向の直線(y=1x)となっています。
+
+また直線の長さも変わっており、`sqrt(100^2+100^2)` つまり 141.42 となります。
+
+### dmx (PB) と dmy (PD)
+
+垂直方向の線を変換する場合、dmxとdmyはその線の勾配と倍率を指定します。
+
+dmxとdmyは前述のdx,dyといっしょに指定されることが基本です。
+
+たとえば、水平線と垂直線で囲まれた正方形の領域を回転させる場合、通常は(平行四辺形より)回転した正方形の領域が望ましい結果となります。
+
+上の例(長さ100のx方向の直線,`dx=1,dy=1`)に加えて長さ100のy方向の直線がある場合は、`dmx=-1,dmy=1`としてやることで`x=-y`となり、正方形が反時計回りに45度回転することになります。
+
 ### 拡大縮小(伸縮)
 
 今回は拡大縮小のための最小限の解説を行います。
@@ -111,3 +131,37 @@ PD | cos(angle)
 
 GBAのCPUでは浮動小数演算は非常に遅いので、処理速度の面で使いづらいです。GBAでsin、cosの値を利用したいときは、あらかじめ配列に整数のデータとして作成しておき、その配列から値を取得するようにすると速度の面で不安がなくなります。
 
+## はみでた場合
+
+変換の結果、画像がBGの外にはみ出てしまう場合の挙動はBGモードによってことなります。
+
+BGモードが1,2のときは、[BG2CNT,BG3CNT](https://github.com/pokemium/gba_doc_ja/blob/main/lcd/bg_control.md)のbit13で、無視するかwrap(1周)するか指定することができます。
+
+BGモードが3,4,5のときははみでた部分は無視されます。
+
+## Calculating Rotation/Scaling Parameters A-D
+
+```
+  A = Cos (alpha) / xMag    ;distance moved in direction x, same line
+  B = Sin (alpha) / xMag    ;distance moved in direction x, next line
+  C = Sin (alpha) / yMag    ;distance moved in direction y, same line
+  D = Cos (alpha) / yMag    ;distance moved in direction y, next line
+```
+
+## Calculating the position of a rotated/scaled dot
+
+Using the following expressions,
+
+```
+  x0,y0    Rotation Center
+  x1,y1    Old Position of a pixel (before rotation/scaling)
+  x2,y2    New position of above pixel (after rotation scaling)
+  A,B,C,D  BG2PA-BG2PD Parameters (as calculated above)
+```
+
+the following formula can be used to calculate x2,y2:
+
+```
+  x2 = A(x1-x0) + B(y1-y0) + x0
+  y2 = C(x1-x0) + D(y1-y0) + y0
+```
