@@ -139,27 +139,23 @@ BGモードが1,2のときは、[BG2CNT,BG3CNT](https://github.com/pokemium/gba_
 
 BGモードが3,4,5のときははみでた部分は無視されます。
 
-## Calculating Rotation/Scaling Parameters A-D
+## 変換後の座標計算
+
+GBAでのアフィン変換は以下の行列を座標に対してかけることで行われます。
+
+![affine_matrix](../img/affine_matrix.png)
+
+- `α`: 回転角度
+- `Sx, Sy`: 拡大倍率
+
+### 数式で現す場合
 
 ```
-  A = Cos (alpha) / xMag    ;distance moved in direction x, same line
-  B = Sin (alpha) / xMag    ;distance moved in direction x, next line
-  C = Sin (alpha) / yMag    ;distance moved in direction y, same line
-  D = Cos (alpha) / yMag    ;distance moved in direction y, next line
+  x0,y0    => 回転の中心座標
+  x1,y1    => 変換前の座標
+  x2,y2    => 変換後の座標
+  A,B,C,D  => pa, pb, pc, pd
 ```
-
-## Calculating the position of a rotated/scaled dot
-
-Using the following expressions,
-
-```
-  x0,y0    Rotation Center
-  x1,y1    Old Position of a pixel (before rotation/scaling)
-  x2,y2    New position of above pixel (after rotation scaling)
-  A,B,C,D  BG2PA-BG2PD Parameters (as calculated above)
-```
-
-the following formula can be used to calculate x2,y2:
 
 ```
   x2 = A(x1-x0) + B(y1-y0) + x0
