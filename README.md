@@ -64,6 +64,7 @@ GameBoy Advanceについて、技術的な詳細を日本語でまとめたも�
 
 - [命令一覧](./bios/bios.md)
 - [算術](./bios/arithmetic.md)
+- [伸縮回転](./bios/rotation_scaling.md)
 - [メモリコピー](./bios/memcpy.md)
 - [Halt](./bios/halt.md)
 - [リセット](./bios/reset.md)
