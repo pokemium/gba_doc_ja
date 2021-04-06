@@ -6,17 +6,17 @@
 
  bit | 内容
 ---- | ----
-0     | BG0 1st Target Pixel (BG0)
-1     | BG1 1st Target Pixel (BG1)
-2     | BG2 1st Target Pixel (BG2)
-3     | BG3 1st Target Pixel (BG3)
+0     | BG0を1stターゲットに
+1     | BG1を1stターゲットに
+2     | BG2を1stターゲットに
+3     | BG3を1stターゲットに
 4     | OBJ 1st Target Pixel (Top-most OBJ pixel)
 5     | BD  1st Target Pixel (Backdrop)
 6-7   | 特殊効果の種類 (後述)  
-8     | BG0 2nd Target Pixel (BG0)
-9     | BG1 2nd Target Pixel (BG1)
-10    | BG2 2nd Target Pixel (BG2)
-11    | BG3 2nd Target Pixel (BG3)
+8     | BG0を2ndターゲットに
+9     | BG1を2ndターゲットに
+10    | BG2を2ndターゲットに
+11    | BG3を2ndターゲットに
 12    | OBJ 2nd Target Pixel (Top-most OBJ pixel)
 13    | BD  2nd Target Pixel (Backdrop)
 14-15 | 未使用
