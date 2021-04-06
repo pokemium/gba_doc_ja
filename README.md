@@ -53,7 +53,7 @@ GameBoy Advanceについて、技術的な詳細を日本語でまとめたも�
 - [BG伸縮回転](./lcd/bg_rotation_scaling.md)
 - [ウィンドウ](./lcd/window.md)
 - [モザイク](./lcd/mosaic.md)
-- [ブレンド](./lcd/brend.md)
+- [ブレンド](./lcd/blend.md)
 - [割り込み](./lcd/interrupt_and_status.md)
 - [タイルモード](./lcd/tile_mode.md)
 - [ビットマップモード](./lcd/bitmap_mode.md)
