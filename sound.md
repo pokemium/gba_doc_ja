@@ -8,22 +8,28 @@ GBAにはモノラルスピーカーが1つだけ内蔵されており、外部�
 
 ### 0x0400_0060 - SOUND1CNT_L (NR10) - Channel 1 Sweep register (R/W)
 
+> Sweep: 一定の速度で周波数を変化させる事
+
 Bit | Expl. 
 -- | -- 
 0-2  | R/W  Number of sweep shift      (n=0-7)
 3    | R/W  Sweep Frequency Direction  (0=Increase, 1=Decrease)
 4-6  | R/W  Sweep Time; units of 7.8ms (0-7, min=7.8ms, max=54.7ms)
-7-15 | -    Not used
+7-15 | -    不使用
 
 スイープタイム(bit4-6)を0にすることでスイープが無効になりますが、その場合はdirectionビット(bit3)を設定する必要があります。
 
 各シフトにおける周波数の変化(NR13,NR14)は、`X(0)`を初期周波数、`X(t-1)`を最終周波数として、以下の式で算出されます。
 
 ```
-X(t) = X(t-1) +/- X(t-1)/2^n
+X(t) = X(t-1) ± X(t-1)/2^n
 ```
 
 ### 0x0400_0062 - SOUND1CNT_H (NR11, NR12) - Channel 1 Duty/Len/Envelope (R/W)
+
+> Duty: デューティ比。周期的な現象において、特定期間のうち現象が継続される期間の割合のこと
+> Len: 長さ(Length)
+> Envelope: 音が発音されてから聞こえなくなるまでの音量の時間的変化
 
 Bit | Expl. 
 -- | -- 
@@ -33,7 +39,7 @@ Bit | Expl.
 11    | R/W  Envelope Direction                  (0=Decrease, 1=Increase)
 12-15 | R/W  Initial Volume of envelope          (1-15, 0=No Sound)
 
-Wave Duty:
+Wave Duty(bit6-7):
 
 ```
  0: 12.5% ( -_______-_______-_______ )
@@ -42,24 +48,26 @@ Wave Duty:
  3: 75%   ( ------__------__------__ )
 ```
 
-長さの値は、NR14のビット6が設定されている場合にのみ使用されます。
+長さの値(bit0-5)は、NR14のbit6が設定されている場合にのみ使用されます。
 
 ### 0x0400_0064 - SOUND1CNT_X (NR13, NR14) - Channel 1 Frequency/Control (R/W)
+
+> Frequency: 周波数
 
 Bit | Expl. 
 -- | -- 
 0-10  | W    Frequency; 131072/(2048-n)Hz  (0-2047)
-11-13 | -    Not used
+11-13 | -    不使用
 14    | R/W  Length Flag  (1=Stop output when length in NR11 expires)
 15    | W    Initial      (1=Restart Sound)
-16-31 | -    Not used
+16-31 | -    不使用
 
 ## GBA Sound Channel 2 - Tone
 
-このサウンドチャンネルは、トーン／スイープレジスタがないことを除けば、チャンネル1と同じように動作します。
+このサウンドチャンネルは、スイープレジスタがないことを除けば、チャンネル1と同じように動作します。
 
 ### 0x0400_0068 - SOUND2CNT_L (NR21, NR22) - Channel 2 Duty/Len/Envelope (R/W)
-### 0x0400_006A - 未使用
+### 0x0400_006A - 不使用
 ### 0x0400_006C - SOUND2CNT_H (NR23, NR24) - Channel 2 Frequency/Control (R/W)
 
 詳しくはチャンネル1の説明をみてください。
@@ -74,38 +82,42 @@ Bit | Expl.
 
 Bit | Expl. 
 -- | -- 
-0-4  | -    未使用
+0-4  | -    不使用
 5    | R/W  Wave RAM Dimension   (0=One bank/32 digits, 1=Two banks/64 digits)
 6    | R/W  Wave RAM Bank Number (0-1, see below)
 7    | R/W  Sound Channel 3 Off  (0=Stop, 1=Playback)
-8-15 | -    未使用
+8-15 | -    不使用
 
-現在ビット6で選択されているバンク番号が再生され、Wave RAMへの読み書きは、もう一方の（選択されていない）バンクをアドレスとします。ディメンションが2バンク(bit5が1)に設定されている場合、出力は現在選択されているバンクの再生から始まります。
+現在bit6で選択されているバンク番号が再生され、Wave RAMへの読み書きは、もう一方の（選択されていない）バンクをアドレスとします。
+
+ディメンションが2バンク(bit5が1)に設定されている場合、出力は現在選択されているバンクの再生から始まります。
 
 ### 0x0400_0072 - SOUND3CNT_H (NR31, NR32) - Channel 3 Length/Volume (R/W)
 
 Bit | Expl. 
 -- | -- 
 0-7   | W    Sound length; units of (256-n)/256s  (0-255)
-8-12  | -    未使用
+8-12  | -    不使用
 13-14 | R/W  Sound Volume  (0=Mute/Zero, 1=100%, 2=50%, 3=25%)
 15    | R/W  Force Volume  (0=Use above, 1=Force 75% regardless of above)
 
-長さの値は、NR34のビット6が設定されている場合にのみ使用されます。
+長さの値(bit0-7)は、NR34のbit6が設定されている場合にのみ使用されます。
 
 ### 0x0400_0074 - SOUND3CNT_X (NR33, NR34) - Channel 3 Frequency/Control (R/W)
 
 Bit | Expl. 
 -- | -- 
-0-10  | W    Sample Rate; 2097152/(2048-n) Hz   (0-2047)
-11-13 | -    未使用
+0-10  | W    サンプルレート (0-2047)
+11-13 | -    不使用
 14    | R/W  Length Flag  (1=Stop output when length in NR31 expires)
 15    | W    Initial      (1=Restart Sound)
-16-31 | -    未使用
+16-31 | -    不使用
 
-上記のサンプル・レートは、1秒あたりのWave RAMの桁数を指定するもので、実際のトーン周波数はWave RAMの内容に依存します。次に例を示します。
+サンプルレートはbit0-10の値をnとすると、`2097152/(2048-n) Hz`となります。
 
-Wave RAM, single bank 32 digits | Tone Frequency
+このサンプルレートは、1秒あたりのWave RAMの桁数を指定するもので、実際のトーン周波数はWave RAMの内容に依存します。次に例を示します。
+
+Wave RAM, single bank 32 digits | トーン周波数
 -- | -- 
 FFFFFFFFFFFFFFFF0000000000000000 | 65536/(2048-n) Hz
 FFFFFFFF00000000FFFFFFFF00000000 | 131072/(2048-n) Hz
@@ -142,11 +154,11 @@ GBAでは、2つのWaveパターン（各32×4bits）が存在し、どちらか
 Bit | Expl. 
 -- | -- 
 0-5   | W    Sound length; units of (64-n)/256s  (0-63)
-6-7   | -    未使用
+6-7   | -    不使用
 8-10  | R/W  Envelope Step-Time; units of n/64s  (1-7, 0=No Envelope)
 11    | R/W  Envelope Direction                  (0=Decrease, 1=Increase)
 12-15 | R/W  Initial Volume of envelope          (1-15, 0=No Sound)
-16-31 | -    未使用
+16-31 | -    不使用
 
 長さの値は、NR44のビット6が設定されている場合のみ使用されます。
 
@@ -161,10 +173,10 @@ Bit | Expl.
 0-2   | R/W  Dividing Ratio of Frequencies (r)
 3     | R/W  Counter Step/Width (0=15 bits, 1=7 bits)
 4-7   | R/W  Shift Clock Frequency (s)
-8-13  | -    未使用
+8-13  | -    不使用
 14    | R/W  Length Flag  (1=Stop output when length in NR41 expires)
 15    | W    Initial      (1=Restart Sound)
-16-31 | -    未使用
+16-31 | -    不使用
 
 ```
 周波数 = 524288 Hz / r / 2^(s+1)     ; r=0のときはr=0.5として扱います
@@ -234,9 +246,15 @@ Endif
 
 ### サンプルレート
 
-GBAのハードウェアは、すべてのサウンド出力を内部的に32.768kHzに再サンプリングしています（SOUNDBIASのデフォルト設定）。
+> サンプリング: 音のA/D変換
+> サンプルレート: 1秒間にサンプリングを行う回数。高ければ高いほど音質がいい
+> リサンプリング: あるサンプルレートのデジタル信号を別のサンプルレートの信号に変換する事
 
-そのため、DMA/Timerのレートを高くしてもあまり意味がありません。DMA/Timerのレートを32.768kHz、16.384kHz、8.192kHz、つまり物理的な出力レートのフラグメントにすることで、最高のリサンプリング精度が得られます。
+GBAのハードウェアは、SOUNDBIASのデフォルト設定ではすべてのサウンド出力を内部的に32.768kHzにリサンプリングしています。
+
+そのため、DMA/Timerのレートを高くしてもあまり意味がありません。
+
+DMA/Timerのレートを32.768kHz、16.384kHz、8.192kHz、つまり物理的な出力レート(32.768kHz)の1倍, 1/2倍, 1/4倍にすることで、最高のリサンプリング精度が得られます。
 
 ## GBA Sound Control Registers
 
@@ -245,9 +263,9 @@ GBAのハードウェアは、すべてのサウンド出力を内部的に32.76
 Bit | Expl. 
 -- | -- 
 0-2   | R/W  Sound 1-4 Master Volume RIGHT (0-7)
-3     | -    Not used
+3     | -    不使用
 4-6   | R/W  Sound 1-4 Master Volume LEFT (0-7)
-7     | -    Not used
+7     | -    不使用
 8-11  | R/W  Sound 1-4 Enable Flags RIGHT (each Bit 8-11, 0=Disable, 1=Enable)
 12-15 | R/W  Sound 1-4 Enable Flags LEFT (each Bit 12-15, 0=Disable, 1=Enable)
 
@@ -258,7 +276,7 @@ Bit | Expl.
 0-1 | R/W  Sound # 1-4 Volume   (0=25%, 1=50%, 2=100%, 3=Prohibited)
 2   | R/W  DMA Sound A Volume   (0=50%, 1=100%)
 3   | R/W  DMA Sound B Volume   (0=50%, 1=100%)
-4-7 | -    Not used
+4-7 | -    不使用
 8   | R/W  DMA Sound A Enable RIGHT (0=Disable, 1=Enable)
 9   | R/W  DMA Sound A Enable LEFT  (0=Disable, 1=Enable)
 10  | R/W  DMA Sound A Timer Select (0=Timer 0, 1=Timer 1)
@@ -270,7 +288,7 @@ Bit | Expl.
 
 ### 0x0400_0084 - SOUNDCNT_X (NR52) - Sound on/off (R/W)
 
-ビット0-3は、音声出力開始時に自動的に設定され、音声が終了すると自動的にクリアされます。
+bit0-3は、音声出力開始時に自動的に設定され、音声が終了すると自動的にクリアされます。
 
 つまり、長さが有効になっている限り、その長さ分の再生が終了するとクリアされます。また、ボリュームエンベロープが終了しても、ビットはリセットされません
 
@@ -280,9 +298,9 @@ Bit | Expl.
 1    | R    Sound 2 ON flag (Read Only)
 2    | R    Sound 3 ON flag (Read Only)
 3    | R    Sound 4 ON flag (Read Only)
-4-6  | -    Not used
+4-6  | -    不使用
 7    | R/W  PSG/FIFO Master Enable (0=Disable, 1=Enable) (Read/Write)
-8-31 | -    Not used
+8-31 | -    不使用
 
 ビット7がクリアされている間は、PSGとFIFOの両方のサウンドが無効になり、4000060h~4000081hのすべてのPSGレジスタがゼロにリセットされます。（サウンドを再度有効にした後、再度初期化する必要があります）
 
@@ -294,11 +312,11 @@ Bit | Expl.
 
 Bit | Expl. 
 -- | -- 
-0     | -    Not used
+0     | -    不使用
 1-9   | R/W  Bias Level (Default=100h, converting signed samples into unsigned)
-10-13 | -    Not used
+10-13 | -    不使用
 14-15 | R/W  Amplitude Resolution/Sampling Cycle (Default=0, see below)
-16-31 | -    Not used
+16-31 | -    不使用
 
 ```
 Amplitude Resolution/Sampling Cycle (0-3):
