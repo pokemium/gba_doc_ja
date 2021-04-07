@@ -15,7 +15,7 @@ Bit | Expl.
 0-2  | R/W  Number of sweep shift      (n=0-7)
 3    | R/W  Sweep Frequency Direction  (0=Increase, 1=Decrease)
 4-6  | R/W  Sweep Time; units of 7.8ms (0-7, min=7.8ms, max=54.7ms)
-7-15 | -    不使用
+7-15 | 不使用
 
 スイープタイム(bit4-6)を0にすることでスイープが無効になりますが、その場合はdirectionビット(bit3)を設定する必要があります。
 
@@ -57,10 +57,10 @@ Wave Duty(bit6-7):
 Bit | Expl. 
 -- | -- 
 0-10  | W    Frequency; 131072/(2048-n)Hz  (0-2047)
-11-13 | -    不使用
+11-13 | 不使用
 14    | R/W  Length Flag  (1=Stop output when length in NR11 expires)
 15    | W    Initial      (1=Restart Sound)
-16-31 | -    不使用
+16-31 | 不使用
 
 ## GBA Sound Channel 2 - Tone
 
@@ -82,11 +82,11 @@ Bit | Expl.
 
 Bit | Expl. 
 -- | -- 
-0-4  | -    不使用
+0-4  | 不使用
 5    | R/W  Wave RAM Dimension   (0=One bank/32 digits, 1=Two banks/64 digits)
 6    | R/W  Wave RAM Bank Number (0-1, see below)
 7    | R/W  Sound Channel 3 Off  (0=Stop, 1=Playback)
-8-15 | -    不使用
+8-15 | 不使用
 
 現在bit6で選択されているバンク番号が再生され、Wave RAMへの読み書きは、もう一方の（選択されていない）バンクをアドレスとします。
 
@@ -97,7 +97,7 @@ Bit | Expl.
 Bit | Expl. 
 -- | -- 
 0-7   | W    Sound length; units of (256-n)/256s  (0-255)
-8-12  | -    不使用
+8-12  | 不使用
 13-14 | R/W  Sound Volume  (0=Mute/Zero, 1=100%, 2=50%, 3=25%)
 15    | R/W  Force Volume  (0=Use above, 1=Force 75% regardless of above)
 
@@ -108,10 +108,10 @@ Bit | Expl.
 Bit | Expl. 
 -- | -- 
 0-10  | W    サンプルレート (0-2047)
-11-13 | -    不使用
+11-13 | 不使用
 14    | R/W  Length Flag  (1=Stop output when length in NR31 expires)
 15    | W    Initial      (1=Restart Sound)
-16-31 | -    不使用
+16-31 | 不使用
 
 サンプルレートはbit0-10の値をnとすると、`2097152/(2048-n) Hz`となります。
 
@@ -154,11 +154,11 @@ GBAでは、2つのWaveパターン（各32×4bits）が存在し、どちらか
 Bit | Expl. 
 -- | -- 
 0-5   | W    Sound length; units of (64-n)/256s  (0-63)
-6-7   | -    不使用
+6-7   | 不使用
 8-10  | R/W  Envelope Step-Time; units of n/64s  (1-7, 0=No Envelope)
 11    | R/W  Envelope Direction                  (0=Decrease, 1=Increase)
 12-15 | R/W  Initial Volume of envelope          (1-15, 0=No Sound)
-16-31 | -    不使用
+16-31 | 不使用
 
 長さの値は、NR44のビット6が設定されている場合のみ使用されます。
 
@@ -173,10 +173,10 @@ Bit | Expl.
 0-2   | R/W  Dividing Ratio of Frequencies (r)
 3     | R/W  Counter Step/Width (0=15 bits, 1=7 bits)
 4-7   | R/W  Shift Clock Frequency (s)
-8-13  | -    不使用
+8-13  | 不使用
 14    | R/W  Length Flag  (1=Stop output when length in NR41 expires)
 15    | W    Initial      (1=Restart Sound)
-16-31 | -    不使用
+16-31 | 不使用
 
 ```
 周波数 = 524288 Hz / r / 2^(s+1)     ; r=0のときはr=0.5として扱います
@@ -258,14 +258,14 @@ DMA/Timerのレートを32.768kHz、16.384kHz、8.192kHz、つまり物理的な
 
 ## GBA Sound Control Registers
 
-### 0x0400_0080 - SOUNDCNT_L (NR50, NR51) - Channel L/R Volume/Enable (R/W)
+### 0x0400_0080 - SOUNDCNT_L (NR50, NR51) - L/Rチャンネルの音量制御 (R/W)
 
 Bit | Expl. 
 -- | -- 
 0-2   | R/W  Sound 1-4 Master Volume RIGHT (0-7)
-3     | -    不使用
+3     | 不使用
 4-6   | R/W  Sound 1-4 Master Volume LEFT (0-7)
-7     | -    不使用
+7     | 不使用
 8-11  | R/W  Sound 1-4 Enable Flags RIGHT (each Bit 8-11, 0=Disable, 1=Enable)
 12-15 | R/W  Sound 1-4 Enable Flags LEFT (each Bit 12-15, 0=Disable, 1=Enable)
 
@@ -276,7 +276,7 @@ Bit | Expl.
 0-1 | R/W  Sound # 1-4 Volume   (0=25%, 1=50%, 2=100%, 3=Prohibited)
 2   | R/W  DMA Sound A Volume   (0=50%, 1=100%)
 3   | R/W  DMA Sound B Volume   (0=50%, 1=100%)
-4-7 | -    不使用
+4-7 | 不使用
 8   | R/W  DMA Sound A Enable RIGHT (0=Disable, 1=Enable)
 9   | R/W  DMA Sound A Enable LEFT  (0=Disable, 1=Enable)
 10  | R/W  DMA Sound A Timer Select (0=Timer 0, 1=Timer 1)
@@ -298,25 +298,27 @@ Bit | Expl.
 1    | R    Sound 2 ON flag (Read Only)
 2    | R    Sound 3 ON flag (Read Only)
 3    | R    Sound 4 ON flag (Read Only)
-4-6  | -    不使用
+4-6  | 不使用
 7    | R/W  PSG/FIFO Master Enable (0=Disable, 1=Enable) (Read/Write)
-8-31 | -    不使用
+8-31 | 不使用
 
-ビット7がクリアされている間は、PSGとFIFOの両方のサウンドが無効になり、4000060h~4000081hのすべてのPSGレジスタがゼロにリセットされます。（サウンドを再度有効にした後、再度初期化する必要があります）
+bit7がクリアされている間は、PSGとFIFOの両方のサウンドが無効になり、4000060h~4000081hのすべてのPSGレジスタがゼロにリセットされます。（サウンドを再度有効にした後、再度初期化する必要があります）
 
 ただし、レジスタ4000082hと4000088hは読み書き可能です。このうち、4000082hはサウンドがオフのときには機能しませんが、4000088hはサウンドがオフでも機能します。
 
 ### 0x0400_0088 - SOUNDBIAS - Sound PWM Control (R/W, see below)
 
+> PWM: パルス幅変調
+
 このレジスタは、最終的なサウンド出力を制御します。デフォルトの設定は0200hで、通常はこの値を変更する必要はありません。
 
 Bit | Expl. 
 -- | -- 
-0     | -    不使用
-1-9   | R/W  Bias Level (Default=100h, converting signed samples into unsigned)
-10-13 | -    不使用
+0     | 不使用
+1-9   | R/W  BIASレベル (Default=100h, converting signed samples into unsigned)
+10-13 | 不使用
 14-15 | R/W  Amplitude Resolution/Sampling Cycle (Default=0, see below)
-16-31 | -    不使用
+16-31 | 不使用
 
 ```
 Amplitude Resolution/Sampling Cycle (0-3):
