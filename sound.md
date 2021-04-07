@@ -4,7 +4,7 @@ GBAには、トーンとノイズ用の4つの「アナログ」サウンドチ�
 
 GBAにはモノラルスピーカーが1つだけ内蔵されており、外部のラインアウト端子（ステレオヘッドフォンなど）を使って、各チャンネルを左右どちらかのチャンネルに出力することができます。
 
-## GBA Sound Channel 1 - Tone & Sweep
+## 1️⃣ GBA Sound Channel 1 - Tone & Sweep
 
 ### 0x0400_0060 - SOUND1CNT_L (NR10) - Channel 1 Sweep register (R/W)
 
@@ -64,7 +64,7 @@ Bit | Expl.
 15    | W    Initial      (1=Restart Sound)
 16-31 | 不使用
 
-## GBA Sound Channel 2 - Tone
+## 2️⃣ GBA Sound Channel 2 - Tone
 
 このサウンドチャンネルは、スイープレジスタがないことを除けば、チャンネル1と同じように動作します。
 
@@ -74,7 +74,7 @@ Bit | Expl.
 
 詳しくはチャンネル1の説明をみてください。
 
-## GBA Sound Channel 3 - Wave Output
+## 3️⃣ GBA Sound Channel 3 - Wave Output
 
 このサウンドチャンネルはデジタルサウンドを出力するためのものです。サンプルバッファ（Wave RAM）の長さは、32桁または64桁（4ビットサンプル）です。
 
@@ -145,7 +145,7 @@ GBAでは、2つのWaveパターン（各32×4bits）が存在し、どちらか
 内部的には、Wave RAMは巨大なシフトレジスタであり、現在再生されている桁を指すポインタは存在しません。その代わり、128ビット全体がシフトされ、最下位4ビットが出力されます。
 そのため、Wave RAMからデータを読み出す際には、データの位置が変わっている可能性があります。また、Wave RAMに書き込む際には、すべてのデータを更新する必要があります（古いデータが、以前に書き込まれたのと同じ位置にあると考えるのはよくありません）。
 
-## GBA Sound Channel 4 - Noise
+## 4️⃣ GBA Sound Channel 4 - Noise
 
 ホワイトノイズを出力するためのチャンネルです。これは、一定の周波数で、振幅を高低の間でランダムに切り替えることによって行われます。周波数に応じて、ノイズは「より硬く」または「より柔らかく」見えます。
 
@@ -195,7 +195,7 @@ Bit | Expl.
 
 サウンドをリスタートしたときの初期値は`X=0x40(7bit)`か`X=0x4000(15bit)`です。 データストリームは、`0x7F(7bit)`または`0x7FFF(15bit)`のステップを経て繰り返されます。
 
-## GBA Sound Channel A and B - DMA Sound
+## 🔉 GBA Sound Channel A and B - DMA Sound
 
 GBAには2つのDMAサウンドチャンネル（AとB）があり、それぞれデジタルサウンド（符号付き8ビットデータ、つまり-128～+127）を再生することができます。
 
@@ -260,7 +260,7 @@ GBAのハードウェアは、SOUNDBIASのデフォルト設定ではすべて�
 
 DMA/Timerのレートを32.768kHz、16.384kHz、8.192kHz、つまり物理的な出力レート(32.768kHz)の1倍, 1/2倍, 1/4倍にすることで、最高のリサンプリング精度が得られます。
 
-## GBA Sound Control Registers
+## 🎛 GBA Sound Control Registers
 
 ### 0x0400_0080 - SOUNDCNT_L (NR50, NR51) - L/Rチャンネルの音量制御 (R/W)
 
