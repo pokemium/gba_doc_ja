@@ -106,17 +106,21 @@ DMA有効フラグ(bit15)を0から1に変更すると、SAD, DAD, CNT_Lはリ�
 
 転送開始時には、毎回指定されたデータ単位数を転送します。転送はソフトウェアで停止するまで永遠に繰り返されます。
 
-## サウンドDMA (FIFO Timing Mode) (DMA1/DMA2のみ)
+## サウンドDMA (FIFOモード) (DMA1/DMA2のみ)
 
-サウンド再生用のFIFOへの転送やフレームごとの転送(サウンドDMA)を行う場合は上述のリピートビットをONにします。また転送先アドレスをFIFO_A（0x0400_00A0）またはFIFO_B（0x0400_00A4）に設定する必要があります。
+サウンド再生用のFIFOへの転送(サウンドDMA)を行う場合は上述のリピートビットをONにします。また転送先アドレスをFIFO_A（`0x0400_00a0`）またはFIFO_B（`0x0400_00a4`）に設定する必要があります。
 
-サウンドコントローラからのDMA要求により、32ビットを1単位として4単位分（合計16バイト）転送します（ワードカウントレジスタとDMA転送タイプビットは無視されます）。
+サウンドコントローラからのDMA要求により、32ビットを1単位として4単位分（合計16バイト）転送します。 このとき、ワードカウントレジスタとDMA転送タイプビットは無視されます
 
-FIFOモードでは転送先アドレスはインクリメントされません。
+サウンドDMAでの転送では転送先アドレスはインクリメントされません。
 
-優先度の高いDMAチャンネルは、サウンドDMAを途中でオフにする場合があることを覚えておいてください。例えば、64kHzのサンプルレートを使用している場合、16バイトのサウンドDMAデータが 0.25ms(4kHz)ごとに要求されます。(English: Keep in mind that DMA channels of higher priority may offhold sound DMA. For example, when using a 64 kHz sample rate, 16 bytes of sound DMA data are requested each 0.25ms (4 kHz), at this time another 16 bytes are still in the FIFO so that there's still 0.25ms time to satisfy the DMA request. )
+優先度の高いDMAチャンネルは、サウンドDMAを途中でオフにする場合があることに注意してください。
 
-したがって、より高い優先度を持つDMAは、0.25msよりも長い間操作されるべきではありません。(HBlank時間は16.212usに制限されているため、この問題はHBlank転送では発生しません)
+例えば、64kHzのサンプルレートを使用している場合、16バイトのサウンドDMAデータが 0.25ms(4kHz)ごとに要求されます。よって0.25ms経過するまでに次の16バイトをサウンドDMAでFIFOに転送する必要があります。
+
+よって、サウンドDMAに使うDMAチャネルよりも高い優先度を持つDMA転送は、0.25ms以内に終わるのが望ましいです。
+
+ただし、HBlankの時間は16.212usに制限されているため、この問題はHBlank転送では発生しません
 
 ## Game Pak DMA
 
