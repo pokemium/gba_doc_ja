@@ -87,3 +87,53 @@ GamePak ROMのバスは16bitに制限されているため、GamePak ROMの内�
 ## データフォーマット
 
 GBAでは常にデータはリトルエンディアン形式です。
+
+## Reading from Unused Memory (00004000-01FFFFFF,10000000-FFFFFFFF)
+
+Accessing unused memory at 00004000h-01FFFFFFh, and 10000000h-FFFFFFFFh (and 02000000h-03FFFFFFh when RAM is disabled via Port 4000800h) returns the recently pre-fetched opcode. 
+
+For ARM code this is simply:
+
+```
+  WORD = [$+8]
+```
+
+For THUMB code the result consists of two 16bit fragments and depends on the address area and alignment where the opcode was stored.
+
+For THUMB code in Main RAM, Palette Memory, VRAM, and Cartridge ROM this is:
+
+```
+  LSW = [$+4], MSW = [$+4]
+```
+
+For THUMB code in BIOS or OAM (and in 32K-WRAM on Original-NDS (in GBA mode)):
+
+```
+  LSW = [$+4], MSW = [$+6]   ; for opcodes at 4-byte aligned locations
+  LSW = [$+2], MSW = [$+4]   ; for opcodes at non-4-byte aligned locations
+```
+
+For THUMB code in 32K-WRAM on GBA, GBA SP, GBA Micro, NDS-Lite (but not NDS):
+
+```
+  LSW = [$+4], MSW = OldHI   ; for opcodes at 4-byte aligned locations
+  LSW = OldLO, MSW = [$+4]   ; for opcodes at non-4-byte aligned locations
+```
+
+Whereas OldLO/OldHI are usually:
+
+```
+  OldLO=[$+2], OldHI=[$+2]
+```
+
+Unless the previous opcode's prefetch was overwritten; that can happen if the previous opcode was itself an LDR opcode, ie. if it was itself reading data:
+
+```
+  OldLO=LSW(data), OldHI=MSW(data)
+```
+
+Theoretically, this might also change if a DMA transfer occurs.
+
+Note: Additionally, as usually, the 32bit data value will be rotated if the data address wasn't 4-byte aligned, and the upper bits of the 32bit value will be masked in case of LDRB/LDRH reads.
+
+Note: The opcode prefetch is caused by the prefetch pipeline in the CPU itself, not by the external gamepak prefetch, ie. it works for code in ROM and RAM as well.
