@@ -88,7 +88,17 @@ GamePak ROMのバスは16bitに制限されているため、GamePak ROMの内�
 
 GBAでは常にデータはリトルエンディアン形式です。
 
-## Reading from Unused Memory (00004000-01FFFFFF,10000000-FFFFFFFF)
+## メモリのミラー
+
+- BIOS, IO: ミラー無し
+- EWRAM: 0x40000ごとに`0x02000000-0x02FFFFFF`の範囲に渡ってミラー
+- IWRAM: 0x8000ごとに`0x03000000-0x03FFFFFF`の範囲に渡ってミラー
+- Palette: 0x400ごとに`0x05000000-0x05FFFFFF`の範囲に渡ってミラー
+- VRAM: `0x06010000-0x06017FFF`が`0x06018000-0x0601FFFF`にミラー、そして0x20000ごとに`0x06000000-0x06FFFFFFF`の範囲に渡ってミラー
+- OAM: 0x400ごとに`0x07000000-0x07FFFFFF`の範囲に渡ってミラー
+- SRAM: 0x10000ごとに`0xE000000-0xFFFFFFF`の範囲に渡ってミラー
+
+## 不使用メモリ領域からの読み込み (0x00004000-01FFFFFF, 0x10000000-FFFFFFFF)
 
 Accessing unused memory at 00004000h-01FFFFFFh, and 10000000h-FFFFFFFFh (and 02000000h-03FFFFFFh when RAM is disabled via Port 4000800h) returns the recently pre-fetched opcode. 
 
