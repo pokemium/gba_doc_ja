@@ -62,7 +62,7 @@ GBAのSRAM/FRAMカートリッジには、（古い8bitゲームボーイのカ�
 
 （カートリッジを取り外すときにトリガされる可能性が高い）Gamepak Interruptを有効にして、割り込みハンドラがGamepak IRQを感知すると、GBAを無限ループでハングアップさせます。理由は明白で、割り込みハンドラは（取り外した）ROMカートリッジではなく、WRAMに配置する必要があります。ハンドラはGamepakのIRQを最優先で処理します。割り込みが禁止されている期間はできるだけ短くし、必要に応じてネストした割り込みを許可してください。
 
-**When to use the above Workaround**
+**上記の挙動を使うべきタイミング**
 
 WRAMのコードとデータに完全に依存していて、ROMを取り外してもクラッシュしないプログラムは、上記のメカニズムを使用しなくても動作を続けることができます。カートリッジが挿入されていない状態で動作するプログラム（シングルゲームパック/マルチブートスレーブなど）や、ゲームパックのIRQ/DMAを他の目的で使用しているプログラムには、この回避策を使用しないでください。
 
@@ -83,22 +83,30 @@ SRAM/FRAMカートリッジでは、/REQピン（ゲームパックバスの31�
 ```
 9853 - EEPROM 512B (0200h) (4Kbit) (eg. used by Super Mario Advance)
 9854 - EEPROM 8KB (2000h) (64Kbit) (eg. used by Boktai)
-セーブ機能の寿命: 100,000回の読み書き
+セーブ機能の寿命: アドレスあたり100,000回の読み書き
 ```
 
 **Addressing and Waitstates**
 
-The eeprom is connected to Bit0 of the data bus, and to the upper 1 bit (or upper 17 bits in case of large 32MB ROM) of the cartridge ROM address bus, communication with the chip takes place serially.
-The eeprom must be used with 8 waitstates (set WAITCNT=X3XXh; 8,8 clks in WS2 area), the eeprom can be then addressed at DFFFF00h..DFFFFFFh.
-Respectively, with eeprom, ROM is restricted to 8000000h-9FFFeFFh (max. 1FFFF00h bytes = 32MB minus 256 bytes). On carts with 16MB or smaller ROM, eeprom can be alternately accessed anywhere at D000000h-DFFFFFFh.
+eepromは、データバスのBit0と、カートリッジROMアドレスバスの上位1ビット(32MBの大容量ROMの場合は上位17ビット)に接続されており、チップとの通信はシリアル通信で行われます。
+
+eepromのアクセスには8waitstatesが必要です。(set WAITCNT=X3XXh; 8,8 clks in WS2 area)
+
+またeepromは`0xDFFFF00..0xDFFFFFF`にマッピングされます。
+
+それぞれ、eepromの場合、ROMは`0x8000000-0x9FFFeFF`(最大で0x1FFFF00バイト = `32MB - 256B`)に制限されます。
+
+16MB以下のROMを搭載したカートでは、`0xD000000-0xDFFFFFF`の任意の位置でeepromに交互にアクセスすることができます。
 
 **Data and Address Width**
 
-Data can be read from (or written to) the EEPROM in units of 64bits (8 bytes). Writing automatically erases the old 64bits of data. Addressing works in units of 64bits respectively, that is, for 512 Bytes EEPROMS: an address range of 0-3Fh, 6bit bus width; and for 8KByte EEPROMs: a range of 0-3FFh, 14bit bus width (only the lower 10 address bits are used, upper 4 bits should be zero).
+EEPROMのデータは、64ビット（8バイト）単位で読み書きできます。
+
+書き込みを行うと、それまでの64ビットのデータは自動的に消去されます。すなわち，512バイトのEEPROMでは、`0x0-0x3F`のアドレス範囲、6ビットのバス幅となります。8KBのEEPROMでは、`0x0-0x3FF`のアドレス範囲，14ビットのバス幅となります。（アドレスの下位10ビットのみ使用し、上位4ビットは0とします）
 
 **Set Address (For Reading)**
 
-Prepare the following bitstream in memory:
+次のようなビットストリームをメモリ上に用意します。
 
 ```
   2 bits "11" (Read Request)
@@ -106,11 +114,11 @@ Prepare the following bitstream in memory:
   1 bit "0"
 ```
 
-Then transfer the stream to eeprom by using DMA.
+その後、DMAを使ってeepromにストリームを転送します。
 
 **Read Data**
 
-Read a stream of 68 bits from EEPROM by using DMA, then decipher the received data as follows:
+DMAを使ってEEPROMから68ビットのストリームを読み出し、受信したデータを以下のようにデコードします。
 
 ```
   4 bits - ignore these
@@ -119,7 +127,9 @@ Read a stream of 68 bits from EEPROM by using DMA, then decipher the received da
 
 **Write Data to Address**
 
-Prepare the following bitstream in memory, then transfer the stream to eeprom by using DMA, it'll take ca. 108368 clock cycles (ca. 6.5ms) until the old data is erased and new data is programmed.
+次のようなビットストリームをメモリ上に用意し、DMAを使ってeepromに転送します。
+
+古いデータが消去され、新しいデータがプログラムされるまで、約108368クロックサイクル（約6.5ms）かかります。
 
 ```
   2 bits "10" (Write Request)
@@ -128,31 +138,38 @@ Prepare the following bitstream in memory, then transfer the stream to eeprom by
   1 bit "0"
 ```
 
-After the DMA, keep reading from the chip, by normal LDRH [DFFFF00h], until Bit 0 of the returned data becomes "1" (Ready). To prevent your program from locking up in case of malfunction, generate a timeout if the chip does not reply after 10ms or longer.
+DMA終了後、通常の`LDRH [DFFFF00h]`により、戻ってきたデータのビット0が "1"(Ready)になるまで、チップからの読み出しを続けます。
+
+誤動作時にプログラムがロックしないように、10ms以上経ってもチップが応答しない場合はタイムアウトを発生させてください。
 
 **Using DMA**
 
-Transferring a bitstreams to/from the EEPROM must be done via DMA3 (manual transfers via LDRH/STRH won't work; probably because they don't keep /CS=LOW and A23=HIGH throughout the transfer).
-For using DMA, a buffer in memory must be used (that buffer would be typically allocated temporarily on stack, one halfword for each bit, bit1-15 of the halfwords are don't care, only bit0 is used).
-The buffer must be transfered as a whole to/from EEPROM by using DMA3 (DMA0-2 can't access external memory), use 16bit transfer mode, both source and destination address incrementing (ie. DMA3CNT=80000000h+length).
-DMA channels of higher priority should be disabled during the transfer (ie. H/V-Blank or Sound FIFO DMAs). And, of course any interrupts that might mess with DMA registers should be disabled.
+ビットストリームのEEPROMへ(or から)の転送は、DMA3を介して行う必要があります。 転送中に/CS=LOWとA23=HIGHを維持しないため、LDRH/STRHによる手動転送は動作しません。
+
+DMAを使用するためには、メモリ上のバッファを使用する必要があります。そのバッファは、通常、スタック上に一時的に割り当てられ、ハーフワードあたり1bitを使用します。つまりbit0のみが使用され、bit1-15は無視されます。
+
+バッファはDMA3を使用してEEPROMへ(or から)全体として転送する必要があります（DMA0-2は外部メモリにアクセスできません）。転送モードは16ビットで、ソースとデスティネーションの両方のアドレスをインクリメントします。（例：DMA3CNT=`0x80000000+length`）
+
+優先度の高いDMAチャンネルは、転送中は無効にしてください（例：H/V-BlankやSound FIFO DMA）。また、DMAレジスタに干渉する可能性のある割り込みは、当然ながら無効にしてください。
 
 **Pin-Outs**
 
-The EEPROM chips are having only 8 pins, these are connected, Pin 1..8, to ROMCS, RD, WR, AD0, GND, GND, A23, VDD of the GamePak bus. Carts with 32MB ROM must have A7..A22 logically ANDed with A23.
+EEPROMチップには8つのピンしかなく、これらのピン1～8は、GamePakバスのROMCS、RD、WR、AD0、GND、A23、VDDに接続されています。
+
+32MBのROMを搭載したカートでは、A7～A22とA23を論理的にANDする必要があります。
 
 **注意**
 
-There seems to be no autodection mechanism, so that a hardcoded bus width must be used.
+自動検出の仕組みがないため、ハードコードされたバス幅を使用しなければならないようです。
 
 ## GBA Cart Backup Flash ROM
 
 ```
-64 KB - 512Kbits Flash ROM - Lifetime: 10,000 writes per sector
-128 KB - 1Mbit Flash ROM - Lifetime: ??? writes per sector
+64 KB - 512Kbits Flash ROM - セーブ機能の寿命: セクタあたり10,000回の書き込み
+128 KB - 1Mbit Flash ROM - セーブ機能の寿命: セクタあたりの書き込み回数上限があるはずだが、具体的な回数は不明
 ```
 
-**Chip Identification (all device types)**
+**チップの検出**
 
 ```
   [E005555h]=AAh, [E002AAAh]=55h, [E005555h]=90h  (enter ID mode)
@@ -160,15 +177,15 @@ There seems to be no autodection mechanism, so that a hardcoded bus width must b
   [E005555h]=AAh, [E002AAAh]=55h, [E005555h]=F0h  (terminate ID mode)
 ```
 
-Used to detect the type (and presence) of FLASH chips. See Device Types below.
+FLASHチップの種類（および存在）を検出するために使用します。下記のデバイスの種類を参照してください。
 
-**Reading Data Bytes (all device types)**
+**(複数バイト単位の)データの読み出し**
 
 ```
   dat=[E00xxxxh]                                  (read byte from address xxxx)
 ```
 
-**Erase Entire Chip (all device types)**
+**データの消去**
 
 ```
   [E005555h]=AAh, [E002AAAh]=55h, [E005555h]=80h  (erase command)
@@ -176,9 +193,9 @@ Used to detect the type (and presence) of FLASH chips. See Device Types below.
   wait until [E000000h]=FFh (or timeout)
 ```
 
-Erases all memory in chip, erased memory is FFh-filled.
+チップ内の全メモリを消去し、消去されたメモリは0xFFで埋められます。
 
-**Erase 4Kbyte Sector (all device types, except Atmel)**
+**4KBセクタ単位のデータ消去 (Atmel以外)**
 
 ```
   [E005555h]=AAh, [E002AAAh]=55h, [E005555h]=80h  (erase command)
@@ -186,9 +203,9 @@ Erases all memory in chip, erased memory is FFh-filled.
   wait until [E00n000h]=FFh (or timeout)
 ```
 
-Erases memory at E00n000h..E00nFFFh, erased memory is FFh-filled.
+`E00n000h...E00nFFFh`のメモリを消去し、消去されたメモリは0xFFで埋められます。
 
-**Erase-and-Write 128 Bytes Sector (only Atmel devices)**
+**128Bセクタ単位の消去と書き込み (Atmelのみ)**
 
 ```
   old=IME, IME=0                                  (disable interrupts)
@@ -198,9 +215,9 @@ Erases memory at E00n000h..E00nFFFh, erased memory is FFh-filled.
   wait until [E00xxxxh+7Fh]=dat[7Fh] (or timeout)
 ```
 
-Interrupts (and DMAs) should be disabled during command/write phase. Target address must be a multiple of 80h.
+コマンドフェーズ・ライトフェーズでは、割り込み（およびDMA）を無効にする必要があります。ターゲットアドレスは、0x80の倍数でなければなりません。
 
-**Write Single Data Byte (all device types, except Atmel)**
+**1バイトの書き込み (Atmel以外)**
 
 ```
   [E005555h]=AAh, [E002AAAh]=55h, [E005555h]=A0h  (write byte command)
@@ -208,7 +225,7 @@ Interrupts (and DMAs) should be disabled during command/write phase. Target addr
   wait until [E00xxxxh]=dat (or timeout)
 ```
 
-The target memory location must have been previously erased.
+対象となるメモリアドレスは、事前に消去されている必要があります。
 
 **Terminate Command after Timeout (only Macronix devices, ID=1CC2h)**
 
@@ -216,25 +233,31 @@ The target memory location must have been previously erased.
   [E005555h]=F0h                            (force end of write/erase command)
 ```
 
-Use if timeout occurred during "wait until" periods, for Macronix devices only.
+Macronixデバイスのみ、"wait until"期間中にタイムアウトが発生した場合に使用します。
 
-**Bank Switching (devices bigger than 64K only)**
+**バンクの切り替え (64KBより大きいチップのみ)**
 
 ```
   [E005555h]=AAh, [E002AAAh]=55h, [E005555h]=B0h  (select bank command)
   [E000000h]=bnk                                  (write bank number 0..1)
 ```
 
-Specifies 64K bank number for read/write/erase operations.
+読み出し/書き込み/消去 操作の対象の64Kバンク番号を指定します。
 
-Required because gamepak flash/sram addressbus is limited to 16bit width.
+カートリッジのflash/sramのアドレスバスが16bit幅に制限されているため必要です。
 
-**Device Types**
+**デバイスの種類**
 
-Nintendo puts different FLASH chips in commercial game cartridges. Developers should thus detect & support all chip types. For Atmel chips it'd be recommended to simulate 4K sectors by software, though reportedly Nintendo doesn't use Atmel chips in newer games anymore. Also mind that different timings should not disturb compatibility and performance.
+任天堂は市販のゲームカートリッジに様々な種類のFLASHチップを搭載しています。
+
+そのため、開発者はすべてのチップタイプを検出し、サポートする必要があります。
+
+Atmel製チップの場合、ソフトウェアで4Kセクタをシミュレートすることが推奨されますが、任天堂は後期のゲームではAtmelチップを使用していないと言われています。
+
+また、タイミングの違いが互換性やパフォーマンスを妨げないように注意してください。
 
 ```
-  ID     Name       Size  Sectors  AverageTimings  Timeouts/ms   Waits
+  ID     Name       Size  Sectors  AverageTimings  Timeouts/ms   Waits(w,r)
   D4BFh  SST        64K   16x4K    20us?,?,?       10,  40, 200  3,2
   1CC2h  Macronix   64K   16x4K    ?,?,?           10,2000,2000  8,3
   1B32h  Panasonic  64K   16x4K    ?,?,?           10, 500, 500  4,2
@@ -243,34 +266,28 @@ Nintendo puts different FLASH chips in commercial game cartridges. Developers sh
   09C2h  Macronix   128K  ?        ?,?,?           ?    ?    ?    ?
 ```
 
-Identification Codes MSB=Device Type, LSB=Manufacturer.
+IDの MSBはデバイスの種類、LSBは製造元を表しています。
 
-Size in bytes, and numbers of sectors * sector size in bytes.
+**FLASHメモリへのアクセス**
 
-Average medium Write, Erase Sector, Erase Chips timings are unknown?
+FLASHメモリは，`0xE000000-0xE00FFFF`の SRAMエリアに配置されており，そのバス幅はアドレスが16ビット，データが8ビットに制限されています。このメモリは，8ビット単位で読み書きを行う`LDRB/STRB`オペコードでしかアクセスできません。
 
-Timeouts in milliseconds for Write, Erase Sector, Erase Chips.
-
-Waitstates for Writes, and Reads in clock cycles.
-
-**Accessing FLASH Memory**
-
-FLASH memory is located in the "SRAM" area at E000000h..E00FFFFh, which is restricted to 16bit address and 8bit data buswidths. Respectively, the memory can be accessed only by 8bit read/write LDRB/STRB opcodes.
-
-Also, reading anything (data or status/busy information) can be done only by opcodes executed in WRAM (not from opcodes in ROM) (there's no such restriction for writing).
+また、データやステータス、ビジー情報などを読み出すには、WRAMで実行されるオペコードでのみ可能です。ROM内のオペコードからは読み出せません。（書き込みにはそのような制限はありません）
 
 **FLASH Waitstates**
 
-Use 8 clk waitstates for initial detection (WAITCNT Bits 0,1 both set). After detection of certain device types smaller wait values may be used for write/erase, and even smaller wait values for raw reading, see Device Types table.
+WAITCNTのbit0-1が0b11の場合、最初の検出のために8waitstatesの時間がかかります
 
-In practice, games seem to use smaller values only for write/erase (even though those operations are slow anyways), whilst raw reads are always done at 8 clk waits (even though reads could actually benefit slightly from smaller wait values).
+特定のデバイスタイプが検出された場合、書き込み・消去には、短い待機時間ですみ、生の読み取りにはさらに小さい待機時間で済むことがあります。
 
 **Verify Write/Erase and Retry**
 
-Even though device signalizes the completion of write/erase operations, it'd be recommended to read/confirm the content of the changed memory area by software. In practice, Nintendo's "erase-write-verify-retry" function typically repeats the operation up to three times in case of errors.
+書き込み・消去の完了を知らせる信号が出ていても、変更されたメモリ領域の内容をソフトウェアで読み込んで確認することが推奨されています。
 
-Also, for SST devices only, the "erase-write" and "erase-write-verify-retry" functions repeat the erase command up to 80 times, additionally followed by one further erase command if no retries were needed, otherwise followed by six further erase commands.
+実際には、任天堂の "erase-write-verify-retry" 機能は、エラーが発生した場合に最大3回まで動作を繰り返すのが一般的です。
+
+また、SSTデバイスのみ、"erase-write" および "erase-write-verify-retry" 機能は、消去コマンドを最大80回繰り返し、リトライが不要な場合はさらに1回、それ以外の場合はさらに6回消去コマンドを繰り返します。
 
 **注意**
 
-FLASH (64Kbytes) is used by the game Sonic Advance, and possibly others.
+FLASH（64KB）は、ゲーム「ソニックアドバンス」などで使用されています。
