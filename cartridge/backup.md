@@ -230,6 +230,7 @@ Specifies 64K bank number for read/write/erase operations.
 Required because gamepak flash/sram addressbus is limited to 16bit width.
 
 **Device Types**
+
 Nintendo puts different FLASH chips in commercial game cartridges. Developers should thus detect & support all chip types. For Atmel chips it'd be recommended to simulate 4K sectors by software, though reportedly Nintendo doesn't use Atmel chips in newer games anymore. Also mind that different timings should not disturb compatibility and performance.
 
 ```
@@ -253,6 +254,7 @@ Timeouts in milliseconds for Write, Erase Sector, Erase Chips.
 Waitstates for Writes, and Reads in clock cycles.
 
 **Accessing FLASH Memory**
+
 FLASH memory is located in the "SRAM" area at E000000h..E00FFFFh, which is restricted to 16bit address and 8bit data buswidths. Respectively, the memory can be accessed only by 8bit read/write LDRB/STRB opcodes.
 
 Also, reading anything (data or status/busy information) can be done only by opcodes executed in WRAM (not from opcodes in ROM) (there's no such restriction for writing).
