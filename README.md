@@ -50,6 +50,7 @@ GameBoy Advanceについて、技術的な詳細を日本語でまとめたも�
 - [サイクル](arm7tdmi/cycle.md)
 - [条件](arm7tdmi/cond.md)
 - [例外](arm7tdmi/exception.md)
+- [アラインメント](arm7tdmi/alignment.md)
 
 ### 画面描画
 
