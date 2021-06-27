@@ -41,6 +41,7 @@ GameBoy Advanceについて、技術的な詳細を日本語でまとめたも�
   - [ロード/ストア その2](arm7tdmi/arm/loadstore2.md)
   - [ロード/ストア その3](arm7tdmi/arm/loadstore3.md)
   - [プロセッサ状態](./arm7tdmi/arm/psr.md)
+  - [ARM9](./arm7tdmi/arm/arm9.md)
 - [THUMB命令一覧](./arm7tdmi/thumb/instruction.md)
   - [レジスタ操作](./arm7tdmi/thumb/register.md)
   - [ロード/ストア](./arm7tdmi/thumb/loadstore.md)

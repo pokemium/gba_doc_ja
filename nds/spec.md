@@ -7,6 +7,8 @@
 - 1x ARM946E-S 32bit RISC CPU, 66MHz (NDS9 video) (not used in GBA mode)
 - 1x ARM7TDMI  32bit RISC CPU, 33MHz (NDS7 sound) (16MHz in GBA mode)
 
+ARM946E-S: v5TE
+
 ### 内部メモリ
 
 - 4096KB Main RAM (8192KB in debug version)
