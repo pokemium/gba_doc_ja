@@ -2,7 +2,7 @@
 
 BgAffineSet, ObjAffineSet
 
-## BgAffineSet: swi 0x0e
+## BgAffineSet: swi 0x0e(GBA)
 
 BGの伸縮回転パラメータを計算するのに使用します。
 
@@ -29,7 +29,7 @@ r2: 計算数(ソースデータおよびターゲットデータは配列にな
 
 返り値: なし
 
-## ObjAffineSet: swi 0x0f
+## ObjAffineSet: swi 0x0f(GBA)
 
 OBJのアフィン変換のパラメータを拡大縮小率と回転角度から計算してセットする機能です。
 

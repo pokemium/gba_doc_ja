@@ -1,6 +1,6 @@
 # BIOS
 
-BIOS には、SWI命令を通して利用可能ないくつかのシステムコール機能が含まれています。
+BIOS には、SWI命令を通して利用可能ないくつかのシステムコール関数が含まれています。
 
 システムコールの引数は通常、レジスタR0,R1,R2,R3に渡されます。
 
@@ -69,3 +69,18 @@ nn | 関数
 0x28 | SoundDriverVSyncOff
 0x29 | SoundDriverVSyncOn
 0x2a | SoundGetJumpList
+
+### GBAとNDSのBIOSのシステムコール関数の違い
+
+NDSではBIOSに以下の変更が加えられました。
+
+- SoftResetで使うアドレスが異なる
+- Halt, Stop/Sleep, Div, Sqrtを呼び出すためのSWIの番号が異なる
+- NDS9ではHaltを使うと、r0の内容が破壊される
+- NDS9ではIntrWaitにバグがある
+- CpuFastSet allows 4-byte blocks (nice), but...
+- CpuFastSet works very SLOW because of a programming bug (uncool)
+- 解凍を行う関数でコールバックを利用するようになった
+- SoundBiasにdelayを指定するための引数が追加された
+
+さらにNDSでは、GBAのBIOSにあったいくつかの関数が削除され、新しい関数がいくつか追加されました。

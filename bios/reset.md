@@ -45,7 +45,7 @@ R0のBit5をクリアしてもSIODATA32のLSBが常にクリアされてしま�
 
 `DISPCNT=0x0080`にすると、常に強制的に画面を白に切り替える機能があります（R0の入力に関わらず、画面が白になります）。
 
-## HardReset: swi 0x26(Undocumented)
+## HardReset: swi 0x26(GBA, Undocumented)
 
 この機能は、GBAを再起動します（時間のかかるnintendoの起動画面を無視するための機能も含まれていますが、この機能は特に役に立たず、煩わしいものとなっています）。
 
