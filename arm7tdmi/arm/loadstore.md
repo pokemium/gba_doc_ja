@@ -156,3 +156,13 @@ bit21はライトバックの有無を表すフラグ(W)となります。
 
 - LDR: 1S+1N+1I
 - STR: 2N
+
+## PLD
+
+PLD = Prepare Cache for Load
+
+PLD must use following settings cond=1111b, P=1, B=1, W=0, L=1, Rd=1111b, the address may not use post-indexing, and may not use writeback, the opcode is encoded identical as `LDRNVB R15,<Address>`.
+
+PLDは、特定のメモリアドレスが間もなくアクセスされることをメモリシステムに知らせ、メモリシステムはこのヒントを利用してキャッシングやパイプライニングの準備をすることができます。それ以外は、PLDはプログラムロジックに何の影響も与えず、NOPと同じ動作をします。
+
+PLDはARMv5TE以降でのみサポートされており、ARMv5やARMv5TExPではサポートされていません。
