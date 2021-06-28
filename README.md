@@ -54,6 +54,8 @@ GameBoy Advanceについて、技術的な詳細を日本語でまとめたも�
 - [条件](arm7tdmi/cond.md)
 - [例外](arm7tdmi/exception.md)
 - [アラインメント](arm7tdmi/alignment.md)
+- [CP15](./cp15/cp15.md)
+  - [ID Codes](./cp15/id_codes.md)
 
 ### 画面描画
 
