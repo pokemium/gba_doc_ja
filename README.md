@@ -80,6 +80,7 @@ GameBoy Advanceについて、技術的な詳細を日本語でまとめたも�
 - [メモリコピー](./bios/memcpy.md)
 - [Halt](./bios/halt.md)
 - [リセット](./bios/reset.md)
+- [解凍](./bios/decompression.md)
 
 ## References
 
