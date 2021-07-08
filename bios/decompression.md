@@ -16,14 +16,12 @@ Unpack Infoをr2で指定することで、同じソースデータを異なる�
   - 8bit: ターゲットデータの単位(bit単位, 1, 2, 4, 8, 16, 32)
   - 32bit: Data Offset (Bit 0-30), Zero Data Flag (Bit 31)
 
-The Data Offset is always added to all non-zero source units. 
 
-Zero Data Flagがセットされている場合、
-If the Zero Data Flag was set, it is also added to zero units.
+Data Offsetは解凍対象のデータが0でないときに、解凍対象のデータに加えられる値です。ただし、Zero Data Flagがセットされている場合、解凍対象のデータが0であってもData Offsetが加えられます。
 
-Data is written in 32bit units, Destination can be Wram or Vram. 
+解凍したデータは32bit単位でWRAMかVRAMのターゲットアドレスで指定したメモリに書き込まれます。
 
-The size of unpacked data must be a multiple of 4 bytes. The width of source units (plus the offset) should not exceed the destination width.
+解凍データのサイズは必ず4バイトの倍数である必要があります。ソースデータの単位はターゲットデータの単位を超えてはいけません。
 
 返り値: なし。ターゲットアドレスにデータが書き込まれます。
 
