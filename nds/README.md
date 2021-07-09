@@ -25,6 +25,10 @@ NDSは2つの2Dビデオエンジンを備えていて、両方とも基本的�
 
 - [概要](./video/stuff.md)
 - [BGMode と BG制御](./video/bg_ctl.md)
+- [OBJ](./video/objs.md)
+- [拡張パレット](./video/extended_palettes.md)
+- [キャプチャ](./video/capture.md)
+- [見取り図](./video/block_diagram.md)
 
 **NDS/DSi File Formats for 2D video**
 
