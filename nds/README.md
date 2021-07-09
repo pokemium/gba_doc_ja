@@ -13,3 +13,5 @@
 
 - [CacheとTCM](./memctl/cache_tcm.md)
 - [カートリッジとMain RAM](./memctl/cart_mainram.md)
+- [WRAM](./memctl/wram.md)
+- [VRAM](./memctl/vram.md)
