@@ -37,6 +37,5 @@ NDSは2つの2Dビデオエンジンを備えていて、両方とも基本的�
 Display Power Control（およびDisplay Swap）、VRAMのアロケーションについては、こちらをご覧ください。
 
 - [電源制御](./system/power_control.md)
-- [電源管理デバイス](./system/power_management_device.md)
+- [電源管理装置](./system/power_management_device.md)
 - [メモリ制御 - VRAM](./memctl/vram.md)
-

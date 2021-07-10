@@ -1,4 +1,4 @@
-# 電源管理デバイス
+# 電源管理装置
 
 ## Power Management Device - Mitsumi 3152A (NDS) / Mitsumi 3205B (NDS-LITE)
 

@@ -8,12 +8,18 @@
 
 TCM = Tightly Coupled Memory
 
+メインメモリへのアクセスはバス速度により制限され、CPUのクロックより遅くなります。 
+
+TCMはARM9のコアに直接入ってるメモリ(らしい)で、CPUクロックと同じ速度で動作します。
+
+キャッシュと違いプログラマが内容をコントロールできるらしいです。命令コード用TCM(ITCM)とデータ用TCM(DTCM)があります。
+
+TCM内に完結した状態でCPUが動作している間はバスが空くので、DMAコントローラを同時に動作させることができます。
+
 ```
   ITCM 32K, base=00000000h (固定)
   DTCM 16K, base=moveable  (デフォルトでは base=27C0000h)
 ```
-
-ITCM = Instruction TCM, DTCM = Data TCM
 
 ITCMは移動できませんが、NDSのファームウェアではITCMのサイズを32MBに設定しているため、`0x0-0x1FF_FFFF`のITCMミラーが生成されます。
 
@@ -51,8 +57,7 @@ Region 2 and 7 are not understood? GBA Slot should be max 32MB+64KB, rounded up 
 
 Above settings do not allow to access Shared Memory at 37F8000h? Do not use cache/wbuf for I/O, doing so might suppress writes, and/or might read outdated values.
 
-
-The main purpose of the Protection Unit is debugging, a major problem with GBA programs have been faulty accesses to memory address 00000000h and up (due to [base+offset] addressing with uninitialized (zero) base values). 
+The main purpose of the Protection Unit is debugging, a major problem with GBA programs have been faulty accesses to memory address 00000000h and up (due to \[base+offset\] addressing with uninitialized (zero) base values). 
 
 This problem has been fixed in the NDS, for the ARM9 processor at least, still there are various leaks: For example, the 64MB I/O and VRAM area contains only ca. 660KB valid addresses, and the ARM7 probably doesn't have a Protection Unit at all. Alltogether, the protection is better than in GBA, but it's still pretty crude compared with software debugging tools.
 

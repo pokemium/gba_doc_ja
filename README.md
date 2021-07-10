@@ -92,3 +92,4 @@ GameBoy Advanceについて、技術的な詳細を日本語でまとめたも�
 - [ARM のスタックについて](http://masahir0y.blogspot.com/2012/11/arm.html)
 - [Assembler for the GBA](https://github.com/Touched/asm-tutorial/blob/master/doc.md)
 - [Tonc v1.4.2](https://www.coranac.com/tonc/text/toc.htm)
+- [hkpr.info](https://hkpr.info/ds/wiki/index.php)
